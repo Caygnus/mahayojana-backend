@@ -24,7 +24,8 @@
     "prepare": "husky",
     "lint": "eslint . --config .eslintrc",
     "format": "prettier --write .",
-    "make-env": "ts-node scripts/make-env.ts"
+    "make-env": "ts-node scripts/make-env.ts",
+    "create-feature": "ts-node scripts/create-feature.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -55,6 +56,7 @@
     "multer": "^1.4.5-lts.1",
     "qs": "^6.14.0",
     "socket.io": "^4.8.1",
+    "uuid": "^11.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   }

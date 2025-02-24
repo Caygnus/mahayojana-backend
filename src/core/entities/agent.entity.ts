@@ -1,23 +1,19 @@
-import { Role } from './role.entity';
+enum AgentRole {
+  ADMIN = 'admin',
+  AGENT = 'agent',
+}
 
 export class Agent {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  aadharNumber: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    pincode: string;
-    country: string;
-  };
-  isVerified: boolean;
-  isActive: boolean;
-  roles: Role[];
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  name!: string;
+  email!: string;
+  phone!: string;
+  aadharNumber!: string;
+  isVerified!: boolean;
+  isActive!: boolean;
+  roles!: AgentRole[];
+  createdAt!: Date;
+  updatedAt!: Date;
   lastLoginAt?: Date;
 
   constructor(partial: Partial<Agent>) {

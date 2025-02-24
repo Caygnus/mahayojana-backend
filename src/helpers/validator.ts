@@ -30,9 +30,9 @@ export const JoiAuthBearer = () =>
   }, 'Authorization Header Validation');
 
 export default (
-    schema: Joi.AnySchema,
-    source: ValidationSource = ValidationSource.BODY,
-  ) =>
+  schema: Joi.AnySchema,
+  source: ValidationSource = ValidationSource.BODY,
+) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       const { error } = schema.validate(req[source]);
