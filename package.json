@@ -25,7 +25,9 @@
     "lint": "eslint . --config .eslintrc",
     "format": "prettier --write .",
     "make-env": "ts-node scripts/make-env.ts",
-    "create-feature": "ts-node scripts/create-feature.ts"
+    "create-feature": "ts-node scripts/create-feature.ts",
+    "setup": "ts-node scripts/setup/index.ts",
+    "cleanup-feature": "ts-node scripts/cleanup-feature.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
