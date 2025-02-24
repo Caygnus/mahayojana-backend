@@ -5,71 +5,86 @@
 ```
 src/
 ├── features/          # All features/modules of the application
-│   ├── auth/          # Authentication feature
-│   │   ├── entities/  # Business objects
-│   │   ├── dtos/      # Data Transfer Objects
-│   │   ├── models/    # Database models
-│   │   ├── services/  # Business logic
-│   │   ├── routes/    # Route definitions
-│   │   └── controllers/ # Request handlers
+│   ├── auth/         # Example: Authentication feature
+│   │   ├── entities/     # Business objects
+│   │   ├── dtos/        # Data Transfer Objects
+│   │   ├── models/      # Database models
+│   │   ├── interfaces/  # Feature interfaces
+│   │   ├── repositories/# Data access layer
+│   │   ├── mappers/     # Entity-Model mappers
+│   │   ├── validations/ # Request validation schemas
+│   │   ├── services/    # Business logic
+│   │   ├── controllers/ # Request handlers
+│   │   └── routes/      # Route definitions
 │   └── other-feature/
-├── core/              # Core business logic
-├── utils/             # Shared utilities
-├── types/             # Type definitions
-└── config/            # Configuration files
-
+├── core/             # Core business logic & interfaces
+├── utils/            # Shared utilities
+├── types/           # Type definitions
+└── config/          # Configuration files
 ```
 
 ## Adding a New Feature
 
-Let's create a complete example using Phone OTP Authentication feature.
+Let's create a complete example using Authentication feature.
 
 ### 1. Create Feature Structure
 
-First, create the feature directory structure:
-
+First, use the feature generator script:
 ```bash
+npm run create-feature auth
+```
+
+This will create the following structure:
+```
 src/features/auth/
 ├── entities/          # Business objects
-│   └── otp.entity.ts
+│   └── auth.entity.ts
 ├── dtos/             # Request/Response objects
-│   ├── send-otp.dto.ts
-│   └── verify-otp.dto.ts
+│   ├── create-auth.dto.ts
+│   └── update-auth.dto.ts
 ├── models/           # Database models
-│   └── otp.model.ts
-├── services/         # Business logic
+│   └── auth.model.ts
+├── interfaces/       # Feature interfaces
+│   ├── i-auth.repository.ts
+│   └── i-auth.service.ts
+├── repositories/     # Data access layer
+│   └── auth.repository.ts
+├── mappers/         # Entity-Model mappers
+│   └── auth.mapper.ts
+├── validations/     # Request validation schemas
+│   └── auth.validation.ts
+├── services/        # Business logic
 │   └── auth.service.ts
-├── controllers/      # Request handlers
+├── controllers/     # Request handlers
 │   └── auth.controller.ts
-└── routes/          # Route definitions
+└── routes/         # Route definitions
     └── auth.routes.ts
 ```
 
 ### 2. Define Entity
 
 ```typescript
-// src/features/auth/entities/otp.entity.ts
-export enum OTPPurpose {
-  SIGNUP = 'signup',
-  LOGIN = 'login'
-}
+// src/features/auth/entities/auth.entity.ts
+export class Auth {
+  id!: string;
+  email!: string;
+  password!: string;
+  role!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
 
-export class OTP {
-  id: string;
-  phone: string;
-  code: string;
-  purpose: OTPPurpose;
-  isUsed: boolean;
-  expiresAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
-
-  constructor(data: Partial<OTP>) {
+  constructor(data: Partial<Auth>) {
     Object.assign(this, data);
   }
 
-  isValid(): boolean {
-    return !this.isUsed && new Date() < this.expiresAt;
+  toJSON() {
+    return {
+      id: this.id,
+      email: this.email,
+      role: this.role,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
+    };
   }
 }
 ```
@@ -77,24 +92,37 @@ export class OTP {
 ### 3. Create DTOs
 
 ```typescript
-// src/features/auth/dtos/send-otp.dto.ts
-export class SendOTPDTO {
-  phone: string;
-  purpose: OTPPurpose;
+// src/features/auth/dtos/create-auth.dto.ts
+import { Auth } from '../entities/auth.entity';
 
-  constructor(data: Partial<SendOTPDTO>) {
+export class CreateAuthDTO implements Partial<Auth> {
+  email!: string;
+  password!: string;
+  role!: string;
+
+  constructor(data: Partial<CreateAuthDTO>) {
     Object.assign(this, data);
+  }
+
+  validate(): void {
+    if (!this.email) throw new Error('Email is required');
+    if (!this.password) throw new Error('Password is required');
+    if (!this.role) throw new Error('Role is required');
   }
 }
 
-// src/features/auth/dtos/verify-otp.dto.ts
-export class VerifyOTPDTO {
-  phone: string;
-  code: string;
-  purpose: OTPPurpose;
+// src/features/auth/dtos/update-auth.dto.ts
+export class UpdateAuthDTO implements Partial<Auth> {
+  email?: string;
+  password?: string;
+  role?: string;
 
-  constructor(data: Partial<VerifyOTPDTO>) {
+  constructor(data: Partial<UpdateAuthDTO>) {
     Object.assign(this, data);
+  }
+
+  validate(): void {
+    // Add validation logic here
   }
 }
 ```
@@ -102,128 +130,193 @@ export class VerifyOTPDTO {
 ### 4. Define Database Model
 
 ```typescript
-// src/features/auth/models/otp.model.ts
-import mongoose, { Schema } from 'mongoose';
-import { OTP, OTPPurpose } from '../entities/otp.entity';
+// src/features/auth/models/auth.model.ts
+import mongoose, { Schema, Document } from 'mongoose';
+import { Auth } from '../entities/auth.entity';
 
-const OTPSchema = new Schema({
-  phone: { type: String, required: true },
-  code: { type: String, required: true },
-  purpose: {
-    type: String,
-    enum: Object.values(OTPPurpose),
-    required: true
-  },
-  isUsed: { type: Boolean, default: false },
-  expiresAt: { type: Date, required: true }
+export interface IAuthDocument extends Omit<Auth, 'toJSON' | 'toObject' | 'id'>, Document {
+  _id: mongoose.Types.ObjectId;
+}
+
+const AuthSchema = new Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, required: true }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: {
+    transform: (_, ret) => {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+    }
+  }
 });
 
-// Indexes for performance
-OTPSchema.index({ phone: 1, purpose: 1 });
-OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index
-
-export const OTPModel = mongoose.model<OTP>('OTP', OTPSchema);
+export const AuthModel = mongoose.model<IAuthDocument>('Auth', AuthSchema);
 ```
 
-### 5. Implement Service
+### 5. Create Mapper
 
 ```typescript
-// src/features/auth/services/auth.service.ts
-import { OTPModel } from '../models/otp.model';
-import { SendOTPDTO } from '../dtos/send-otp.dto';
-import { VerifyOTPDTO } from '../dtos/verify-otp.dto';
-import { OTP } from '../entities/otp.entity';
+// src/features/auth/mappers/auth.mapper.ts
+import { Auth } from '../entities/auth.entity';
+import { IAuthDocument } from '../models/auth.model';
 
-export class AuthService {
-  async sendOTP(data: SendOTPDTO): Promise<{ requestId: string }> {
-    // Generate 6 digit OTP
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Set expiry to 10 minutes
-    const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 10);
-
-    const otp = await OTPModel.create({
-      phone: data.phone,
-      code,
-      purpose: data.purpose,
-      expiresAt
+export class AuthMapper {
+  static toEntity(doc: IAuthDocument): Auth {
+    return new Auth({
+      id: doc._id.toString(),
+      email: doc.email,
+      role: doc.role,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt
     });
-
-    // TODO: Integrate with SMS service
-    console.log(`OTP for ${data.phone}: ${code}`);
-
-    return { requestId: otp.id };
   }
 
-  async verifyOTP(data: VerifyOTPDTO): Promise<boolean> {
-    const otp = await OTPModel.findOne({
-      phone: data.phone,
-      code: data.code,
-      purpose: data.purpose,
-      isUsed: false,
-      expiresAt: { $gt: new Date() }
-    });
-
-    if (!otp) {
-      return false;
+  static toModel(entity: Partial<Auth>): Partial<IAuthDocument> {
+    const model: any = { ...entity };
+    if (entity.id) {
+      model._id = entity.id;
+      delete model.id;
     }
+    return model;
+  }
 
-    // Mark OTP as used
-    otp.isUsed = true;
-    await otp.save();
+  static toEntities(docs: IAuthDocument[]): Auth[] {
+    return docs.map(doc => this.toEntity(doc));
+  }
 
-    return true;
+  static toModels(entities: Partial<Auth>[]): Partial<IAuthDocument>[] {
+    return entities.map(entity => this.toModel(entity));
   }
 }
 ```
 
-### 6. Create Controller
+### 6. Create Validation Schemas
+
+```typescript
+// src/features/auth/validations/auth.validation.ts
+import Joi from 'joi';
+import { JoiAuthBearer, JoiObjectId } from '../../../helpers/validator';
+
+export class AuthValidation {
+  static create = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    role: Joi.string().required()
+  });
+
+  static update = Joi.object({
+    email: Joi.string().email().optional(),
+    password: Joi.string().min(6).optional(),
+    role: Joi.string().optional()
+  });
+
+  static id = Joi.object({
+    id: JoiObjectId().required()
+  });
+
+  static auth = Joi.object({
+    authorization: JoiAuthBearer().required()
+  });
+
+  static query = Joi.object({
+    page: Joi.number().optional(),
+    limit: Joi.number().optional()
+  });
+}
+```
+
+### 7. Implement Repository
+
+```typescript
+// src/features/auth/repositories/auth.repository.ts
+import { Auth } from '../entities/auth.entity';
+import { AuthModel, IAuthDocument } from '../models/auth.model';
+import { IAuthRepository } from '../interfaces/i-auth.repository';
+import { AuthMapper } from '../mappers/auth.mapper';
+import { FilterQuery } from 'mongoose';
+
+export class AuthRepository implements IAuthRepository {
+  private mapper: AuthMapper;
+
+  constructor() {
+    this.mapper = new AuthMapper();
+  }
+
+  async findOne(filter: Partial<Auth>): Promise<Auth | null> {
+    const modelFilter = this.mapper.toModel(filter) as FilterQuery<IAuthDocument>;
+    const found = await AuthModel.findOne(modelFilter);
+    return found ? this.mapper.toEntity(found) : null;
+  }
+
+  // Other repository methods...
+}
+```
+
+### 8. Implement Service
+
+```typescript
+// src/features/auth/services/auth.service.ts
+import { IAuthService } from '../interfaces/i-auth.service';
+import { IAuthRepository } from '../interfaces/i-auth.repository';
+import { AuthRepository } from '../repositories/auth.repository';
+import { CreateAuthDTO } from '../dtos/create-auth.dto';
+import { UpdateAuthDTO } from '../dtos/update-auth.dto';
+import { Auth } from '../entities/auth.entity';
+
+export class AuthService implements IAuthService {
+  private repository: IAuthRepository;
+
+  constructor() {
+    this.repository = new AuthRepository();
+  }
+
+  async create(data: CreateAuthDTO): Promise<Auth> {
+    data.validate();
+    return this.repository.create(data);
+  }
+
+  // Other service methods...
+}
+```
+
+### 9. Create Controller with Validation
 
 ```typescript
 // src/features/auth/controllers/auth.controller.ts
 import { Request, Response } from 'express';
+import asyncHandler from '../../../helpers/asyncHandler';
+import validator, { ValidationSource } from '../../../helpers/validator';
 import { AuthService } from '../services/auth.service';
-import { SendOTPDTO } from '../dtos/send-otp.dto';
-import { VerifyOTPDTO } from '../dtos/verify-otp.dto';
+import { CreateAuthDTO } from '../dtos/create-auth.dto';
+import { UpdateAuthDTO } from '../dtos/update-auth.dto';
+import { AuthValidation } from '../validations/auth.validation';
 
 export class AuthController {
-  private authService: AuthService;
+  private service: AuthService;
 
   constructor() {
-    this.authService = new AuthService();
+    this.service = new AuthService();
   }
 
-  async sendOTP(req: Request, res: Response) {
-    try {
-      const data = new SendOTPDTO(req.body);
-      const result = await this.authService.sendOTP(data);
-      res.json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
+  create = [
+    validator(AuthValidation.auth, ValidationSource.HEADER),
+    validator(AuthValidation.create),
+    asyncHandler(async (req: Request, res: Response) => {
+      const data = new CreateAuthDTO(req.body);
+      const result = await this.service.create(data);
+      res.status(201).json(result);
+    })
+  ];
 
-  async verifyOTP(req: Request, res: Response) {
-    try {
-      const data = new VerifyOTPDTO(req.body);
-      const isValid = await this.authService.verifyOTP(data);
-      
-      if (!isValid) {
-        return res.status(400).json({ error: 'Invalid OTP' });
-      }
-
-      res.json({ message: 'OTP verified successfully' });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
+  // Other controller methods with validation...
 }
 ```
 
-### 7. Define Routes
+### 10. Define Routes
 
 ```typescript
 // src/features/auth/routes/auth.routes.ts
@@ -231,15 +324,18 @@ import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
 
 const router = Router();
-const authController = new AuthController();
+const controller = new AuthController();
 
-router.post('/otp/send', (req, res) => authController.sendOTP(req, res));
-router.post('/otp/verify', (req, res) => authController.verifyOTP(req, res));
+router.post('/', controller.create);
+router.get('/:id', controller.findById);
+router.put('/:id', controller.update);
+router.delete('/:id', controller.delete);
+router.get('/', controller.list);
 
 export default router;
 ```
 
-### 8. Register Routes
+### 11. Register Routes
 
 ```typescript
 // src/app.ts
@@ -249,7 +345,6 @@ import authRoutes from './features/auth/routes/auth.routes';
 const app = express();
 app.use(express.json());
 
-// Register routes
 app.use('/api/auth', authRoutes);
 ```
 
@@ -258,80 +353,98 @@ app.use('/api/auth', authRoutes);
 The request flows through the application in this order:
 
 ```
-Request → Route → Controller → Service → Model → Database
-Response ← Controller ← Service ← Model ← Database
+Request → Route → Controller → Service → Repository → Model → Database
+Response ← Controller ← Service ← Repository ← Model ← Database
 ```
 
-Example flow for sending OTP:
-1. Client sends POST request to `/api/auth/otp/send`
-2. Route handler directs to `AuthController.sendOTP`
+Example flow for creating an auth record:
+1. Client sends POST request to `/api/auth`
+2. Route handler directs to `AuthController.create`
 3. Controller creates DTO from request body
-4. Service generates OTP and saves using Model
-5. Response flows back through the same layers
+4. Service validates DTO and calls repository
+5. Repository uses mapper to convert DTO to model
+6. Model saves to database
+7. Response flows back through layers, converting to entity
 
 ## Best Practices
 
-1. **DTOs vs Entities**
-   - DTOs: For request/response data
-   - Entities: For business logic and database
+1. **Layer Responsibilities**
+   - Entities: Core business objects
+   - DTOs: Request/response validation
+   - Models: Database schema
+   - Mappers: Static data transformation methods
+   - Validations: Request validation schemas
+   - Repositories: Data access
+   - Services: Business logic
+   - Controllers: Request handling & validation
 
-2. **Validation**
-   ```typescript
-   // In controller
-   if (!data.phone) {
-     throw new Error('Phone is required');
-   }
-   ```
+2. **Type Safety**
+   - Use TypeScript strictly
+   - Implement interfaces
+   - Use DTOs for validation
+   - Use Joi for request validation
+   - Proper error handling
 
-3. **Error Handling**
-   ```typescript
-   try {
-     // Operation
-   } catch (error) {
-     res.status(400).json({ error: error.message });
-   }
-   ```
+3. **Clean Architecture**
+   - Separation of concerns
+   - Static utility methods
+   - Interface-based design
+   - Domain-driven design
 
 4. **File Naming**
-   - Use `.entity.ts` for entities
-   - Use `.dto.ts` for DTOs
-   - Use `.model.ts` for database models
-   - Use `.service.ts` for services
-   - Use `.controller.ts` for controllers
-   - Use `.routes.ts` for routes
+   - Entities: `*.entity.ts`
+   - DTOs: `create-*.dto.ts`, `update-*.dto.ts`
+   - Models: `*.model.ts`
+   - Interfaces: `i-*.repository.ts`, `i-*.service.ts`
+   - Repositories: `*.repository.ts`
+   - Mappers: `*.mapper.ts`
+   - Validations: `*.validation.ts`
+   - Services: `*.service.ts`
+   - Controllers: `*.controller.ts`
+   - Routes: `*.routes.ts`
 
 ## Testing Your Feature
 
 Test your endpoints using curl or Postman:
 
 ```bash
-# Send OTP
-curl -X POST http://localhost:3000/api/auth/otp/send \
+# Create
+curl -X POST http://localhost:3000/api/auth \
   -H "Content-Type: application/json" \
-  -d '{"phone": "+919876543210", "purpose": "login"}'
+  -d '{"email": "test@example.com", "password": "secret", "role": "user"}'
 
-# Verify OTP
-curl -X POST http://localhost:3000/api/auth/otp/verify \
+# Get by ID
+curl -X GET http://localhost:3000/api/auth/123
+
+# Update
+curl -X PUT http://localhost:3000/api/auth/123 \
   -H "Content-Type: application/json" \
-  -d '{"phone": "+919876543210", "code": "123456", "purpose": "login"}'
+  -d '{"role": "admin"}'
+
+# Delete
+curl -X DELETE http://localhost:3000/api/auth/123
+
+# List
+curl -X GET http://localhost:3000/api/auth
 ```
 
-## Adding New Features
+## Creating New Features
 
-To add a new feature:
+To create a new feature:
 
-1. Create feature directory in `src/features/`
-2. Copy this structure:
+1. Run the feature generator:
+   ```bash
+   npm run create-feature <feature-name>
    ```
-   new-feature/
-   ├── entities/
-   ├── dtos/
-   ├── models/
-   ├── services/
-   ├── controllers/
-   └── routes/
-   ```
-3. Implement each layer
+
+2. Add your feature-specific fields to:
+   - Entity class
+   - DTOs
+   - Database model schema
+   - Mapper transformations
+
+3. Implement validation in DTOs
+
 4. Register routes in `app.ts`
 
 ## Common Pitfalls to Avoid
@@ -342,6 +455,10 @@ To add a new feature:
 4. Handle errors consistently
 5. Keep services single-responsibility
 6. Use meaningful variable and function names
+7. Don't skip mapper implementations
+8. Always validate DTOs before processing
+9. Use proper TypeScript types
+10. Follow the established naming conventions
 
 ## Next Steps
 
