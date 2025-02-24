@@ -3,9 +3,14 @@ import path from 'path';
 
 const FEATURE_NAME = process.argv[2];
 
+// Get version from command line args or default to 1
+const VERSION = process.argv[3] ? parseInt(process.argv[3].replace('v', '')) : 1;
+const VERSION_PREFIX = `v${VERSION}`;
+
 if (!FEATURE_NAME) {
   console.error('Please provide a feature name');
-  console.log('Usage: npm run create-feature <feature-name>');
+  console.log('Usage: npm run create-feature <feature-name> [version]');
+  console.log('Example: npm run create-feature user v2');
   process.exit(1);
 }
 
@@ -449,12 +454,98 @@ files.forEach(file => {
   console.log(`Created file: ${file.path}`);
 });
 
-console.log(`\nFeature '${featureNamePascal}' created successfully!`);
+// Update main routes file with versioning
+const updateMainRoutes = () => {
+  const routesDir = path.join(process.cwd(), 'src', 'routes');
+  const versionDir = path.join(routesDir, VERSION_PREFIX);
+  const versionIndexPath = path.join(versionDir, 'index.ts');
+
+  // Create version directory if it doesn't exist
+  if (!fs.existsSync(versionDir)) {
+    fs.mkdirSync(versionDir, { recursive: true });
+
+    // Create initial version index file
+    const initialVersionContent = `import express from 'express';
+
+const router = express.Router();
+
+export default router;
+`;
+    fs.writeFileSync(versionIndexPath, initialVersionContent);
+  }
+
+  // Update version index file
+  let versionContent = fs.readFileSync(versionIndexPath, 'utf-8');
+
+  // Add import statement if not exists
+  const importStatement = `import ${featureNameKebab}Routes from '../../features/${featureNameKebab}/routes/${featureNameKebab}.routes';`;
+  if (!versionContent.includes(importStatement)) {
+    const lastImportIndex = versionContent.lastIndexOf('import');
+    const insertPosition = lastImportIndex === -1 ? 0 : versionContent.indexOf(';', lastImportIndex) + 1;
+    const beforeImport = versionContent.substring(0, insertPosition);
+    const afterImport = versionContent.substring(insertPosition);
+
+    versionContent = beforeImport + (insertPosition ? '\n' : '') + importStatement + afterImport;
+  }
+
+  // Add route registration if not exists
+  const routeRegistration = `router.use('/${featureNameKebab}', ${featureNameKebab}Routes);`;
+  if (!versionContent.includes(routeRegistration)) {
+    const exportIndex = versionContent.lastIndexOf('export');
+    const beforeExport = versionContent.substring(0, exportIndex);
+    const afterExport = versionContent.substring(exportIndex);
+
+    versionContent = beforeExport + routeRegistration + '\n\n' + afterExport;
+  }
+
+  // Write updated version content
+  fs.writeFileSync(versionIndexPath, versionContent);
+
+  // Update main routes index file
+  const mainIndexPath = path.join(routesDir, 'index.ts');
+  let mainContent = fs.existsSync(mainIndexPath)
+    ? fs.readFileSync(mainIndexPath, 'utf-8')
+    : `import express from 'express';
+
+const router = express.Router();
+
+export default router;
+`;
+
+  // Add version import if not exists
+  const versionImport = `import ${VERSION_PREFIX}Routes from './${VERSION_PREFIX}';`;
+  if (!mainContent.includes(versionImport)) {
+    const lastImportIndex = mainContent.lastIndexOf('import');
+    const insertPosition = lastImportIndex === -1 ? 0 : mainContent.indexOf(';', lastImportIndex) + 1;
+    const beforeImport = mainContent.substring(0, insertPosition);
+    const afterImport = mainContent.substring(insertPosition);
+
+    mainContent = beforeImport + (insertPosition ? '\n' : '') + versionImport + afterImport;
+  }
+
+  // Add version route registration if not exists
+  const versionRegistration = `router.use('/${VERSION_PREFIX}', ${VERSION_PREFIX}Routes);`;
+  if (!mainContent.includes(versionRegistration)) {
+    const exportIndex = mainContent.lastIndexOf('export');
+    const beforeExport = mainContent.substring(0, exportIndex);
+    const afterExport = mainContent.substring(exportIndex);
+
+    mainContent = beforeExport + versionRegistration + '\n\n' + afterExport;
+  }
+
+  // Write updated main content
+  fs.writeFileSync(mainIndexPath, mainContent);
+
+  console.log(`Updated routes file: ${versionIndexPath}`);
+  console.log(`Updated main routes file: ${mainIndexPath}`);
+};
+
+// Update the routes file
+updateMainRoutes();
+
+console.log(`\nFeature '${featureNamePascal}' created successfully in version ${VERSION_PREFIX}!`);
 console.log('\nNext steps:');
 console.log(`1. Add entity fields in: entities/${featureNameKebab}.entity.ts`);
 console.log(`2. Update mapper in: mappers/${featureNameKebab}.mapper.ts`);
 console.log(`3. Add schema fields in: models/${featureNameKebab}.model.ts`);
-console.log(`4. Add validation in DTOs`);
-console.log(`5. Register routes in app.ts:`);
-console.log(`   import ${featureNameKebab}Routes from './features/${featureNameKebab}/routes/${featureNameKebab}.routes';`);
-console.log(`   app.use('/api/${featureNameKebab}', ${featureNameKebab}Routes);`); 
+console.log(`4. Add validation in DTOs`); 
