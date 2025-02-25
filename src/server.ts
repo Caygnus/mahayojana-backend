@@ -5,6 +5,7 @@ import app from './app';
 app
   .listen(port, () => {
     Logger.info(`server running on port : ${port}`);
+    Logger.info(`http://localhost:${port}`);
   })
   .on('error', (e) => Logger.error(e))
   .on('close', () => Logger.info('server closed'))
