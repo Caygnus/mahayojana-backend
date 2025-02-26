@@ -21,4 +21,14 @@ const OtpSchema = new Schema({
   }
 });
 
+OtpSchema.index({ phone: 1 }, { unique: true });
+
+// This index will handle expiration based on the expiresAt field
+OtpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+// This index will automatically delete records 1 minute (60 seconds) after creation
+OtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 10 });
+
+OtpSchema.index({ phone: 1, code: 1 }, { unique: true });
+
 export const OtpModel = mongoose.model<IOtpDocument>('Otp', OtpSchema);

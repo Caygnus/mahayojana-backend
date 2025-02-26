@@ -14,7 +14,7 @@ export class OtpService implements IOtpService {
     data.validate();
     const existingOtp = await this.repository.findOtpByPhone(data.phone);
     if (existingOtp) {
-      throw new BadRequestError('Otp already exists');
+      throw new BadRequestError(`You have already requested an otp for this phone number`);
     }
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const otpData = {
@@ -27,14 +27,16 @@ export class OtpService implements IOtpService {
   async verifyOtp(phone: string, code: string): Promise<boolean> {
     const otp = await this.repository.findOtpByPhone(phone);
     if (!otp) {
-      throw new BadRequestError('Otp not found');
+      throw new BadRequestError('Invalid OTP');
     }
     if (otp.code !== code) {
-      throw new BadRequestError('Invalid code');
+      throw new BadRequestError('Invalid OTP');
     }
     if (otp.expiresAt < new Date()) {
       throw new BadRequestError('Otp expired');
     }
+    await this.repository.deleteOtp(otp.id);
+
     return !!otp;
   }
 }
