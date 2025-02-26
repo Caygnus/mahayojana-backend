@@ -12,7 +12,6 @@ export class AgentMapper {
             address: doc.address,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
-
             // Add other fields here
         });
     }
