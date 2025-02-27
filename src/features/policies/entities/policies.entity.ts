@@ -1,4 +1,10 @@
-export type FieldType = 'string' | 'number' | 'date' | 'boolean' | 'object' | 'array';
+export type FieldType =
+  | 'string'
+  | 'number'
+  | 'date'
+  | 'boolean'
+  | 'object'
+  | 'array';
 
 // Enhanced schema definition for dynamic fields
 export interface DynamicFieldDefinition {
@@ -17,7 +23,7 @@ export interface DynamicFieldDefinition {
   pattern?: string;
   enum?: string[];
 
-  // Number validations  
+  // Number validations
   min?: number;
   max?: number;
   step?: number;
@@ -45,7 +51,7 @@ export interface DynamicFieldDefinition {
   // For object type fields to support nested structure
   properties?: Record<string, DynamicFieldDefinition>;
 
-  // For array type fields 
+  // For array type fields
   items?: DynamicFieldDefinition;
 }
 
@@ -63,10 +69,11 @@ export class Policies {
   policyAmount!: number;
   policyTerm!: number;
   // Schema for dynamic fields - enhanced with more attributes
-  schemaDefinition?: Record<string, DynamicFieldDefinition> | Map<string, DynamicFieldDefinition>;
+  schemaDefinition?:
+    | Record<string, DynamicFieldDefinition>
+    | Map<string, DynamicFieldDefinition>;
   // Actual dynamic fields data
   dynamicFields?: Record<string, any> | Map<string, any>;
-
 
   constructor(data: Partial<Policies>) {
     Object.assign(this, data);
@@ -74,13 +81,15 @@ export class Policies {
 
   toJSON() {
     // Handle Map conversion for schemaDefinition and dynamicFields
-    const schemaDefToReturn = this.schemaDefinition instanceof Map
-      ? Object.fromEntries(this.schemaDefinition)
-      : this.schemaDefinition;
+    const schemaDefToReturn =
+      this.schemaDefinition instanceof Map
+        ? Object.fromEntries(this.schemaDefinition)
+        : this.schemaDefinition;
 
-    const dynamicFieldsToReturn = this.dynamicFields instanceof Map
-      ? Object.fromEntries(this.dynamicFields)
-      : this.dynamicFields;
+    const dynamicFieldsToReturn =
+      this.dynamicFields instanceof Map
+        ? Object.fromEntries(this.dynamicFields)
+        : this.dynamicFields;
 
     return {
       id: this.id,
@@ -96,7 +105,7 @@ export class Policies {
       policyAmount: this.policyAmount,
       policyTerm: this.policyTerm,
       schemaDefinition: schemaDefToReturn,
-      dynamicFields: dynamicFieldsToReturn
+      dynamicFields: dynamicFieldsToReturn,
     };
   }
 }

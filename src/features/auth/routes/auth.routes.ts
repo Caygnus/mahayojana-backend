@@ -85,6 +85,4 @@ router.post('/signup-agent', controller.signupAgent);
  */
 router.post('/login-agent', controller.loginAgent);
 
-
-
 export default router;

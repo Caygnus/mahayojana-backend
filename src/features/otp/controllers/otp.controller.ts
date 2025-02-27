@@ -19,8 +19,6 @@ export class OtpController {
       await this.service.createOtp(data);
 
       new SuccessMsgResponse('Otp sent successfully').send(res);
-    })
+    }),
   ];
-  
-
 }

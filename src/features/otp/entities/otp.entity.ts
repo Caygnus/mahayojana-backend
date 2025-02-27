@@ -17,7 +17,7 @@ export class Otp {
       updatedAt: this.updatedAt,
       phone: this.phone,
       code: this.code,
-      expiresAt: this.expiresAt
+      expiresAt: this.expiresAt,
     };
   }
 }

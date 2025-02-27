@@ -20,7 +20,7 @@ export class AuthController {
       console.log(data);
       const result = await this.service.signupAgent(data);
       new SuccessResponse('Agent created successfully', result).send(res);
-    })
+    }),
   ];
 
   loginAgent = [
@@ -32,9 +32,8 @@ export class AuthController {
 
       new SuccessResponse('Agent logged in successfully', {
         agent,
-        token
+        token,
       }).send(res);
-    })
+    }),
   ];
-
 }

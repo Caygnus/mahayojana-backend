@@ -34,7 +34,11 @@ app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 // Swagger UI
 if (environment !== 'production') {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(specs, { explorer: true }),
+  );
   Logger.info('Swagger UI available at /api-docs');
 }
 

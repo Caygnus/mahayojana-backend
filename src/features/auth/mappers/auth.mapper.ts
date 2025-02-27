@@ -21,10 +21,10 @@ export class AuthMapper {
   }
 
   static toEntities(docs: IAuthDocument[]): Auth[] {
-    return docs.map(doc => this.toEntity(doc));
+    return docs.map((doc) => this.toEntity(doc));
   }
 
   static toModels(entities: Partial<Auth>[]): Partial<IAuthDocument>[] {
-    return entities.map(entity => this.toModel(entity));
+    return entities.map((entity) => this.toModel(entity));
   }
 }

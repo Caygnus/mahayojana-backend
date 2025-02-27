@@ -4,7 +4,7 @@ import { PoliciesService } from '../services/policies.service';
 import { BadRequestError } from '../../../core/ApiError';
 
 export class PoliciesController {
-  constructor(private policiesService: PoliciesService) { }
+  constructor(private policiesService: PoliciesService) {}
 
   /**
    * Create a new policy with dynamic fields
@@ -21,7 +21,11 @@ export class PoliciesController {
   /**
    * Get a policy by ID
    */
-  async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async findById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const policy = await this.policiesService.findById(req.params.id);
       new SuccessResponse('Policy retrieved successfully', policy).send(res);
@@ -57,7 +61,11 @@ export class PoliciesController {
   /**
    * Get all policies with pagination and filtering
    */
-  async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async findAll(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -74,7 +82,8 @@ export class PoliciesController {
       // Prepare query
       const query: Record<string, any> = {
         ...req.query,
-        dynamicFields: Object.keys(dynamicFields).length > 0 ? dynamicFields : undefined
+        dynamicFields:
+          Object.keys(dynamicFields).length > 0 ? dynamicFields : undefined,
       };
 
       const result = await this.policiesService.findAll(query, page, limit);
@@ -87,7 +96,11 @@ export class PoliciesController {
   /**
    * Update policy schema definition
    */
-  async updateSchema(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateSchema(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       if (!req.body.schemaDefinition) {
         throw new BadRequestError('Schema definition is required');
@@ -95,10 +108,12 @@ export class PoliciesController {
 
       const policy = await this.policiesService.updateSchema(
         req.params.id,
-        req.body.schemaDefinition
+        req.body.schemaDefinition,
       );
 
-      new SuccessResponse('Policy schema updated successfully', policy).send(res);
+      new SuccessResponse('Policy schema updated successfully', policy).send(
+        res,
+      );
     } catch (error) {
       next(error);
     }
@@ -107,7 +122,11 @@ export class PoliciesController {
   /**
    * Update policy dynamic fields
    */
-  async updateDynamicFields(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateDynamicFields(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       if (!req.body.dynamicFields) {
         throw new BadRequestError('Dynamic fields are required');
@@ -115,10 +134,13 @@ export class PoliciesController {
 
       const policy = await this.policiesService.updateDynamicFields(
         req.params.id,
-        req.body.dynamicFields
+        req.body.dynamicFields,
       );
 
-      new SuccessResponse('Policy dynamic fields updated successfully', policy).send(res);
+      new SuccessResponse(
+        'Policy dynamic fields updated successfully',
+        policy,
+      ).send(res);
     } catch (error) {
       next(error);
     }

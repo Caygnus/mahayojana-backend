@@ -5,7 +5,6 @@ import { AgentMapper } from '../mappers/agent.mapper';
 import { AgentModel } from '../models/agent.model';
 
 export class AuthRepository implements IAuthRepository {
-
   async createAgent(data: CreateAgentDTO): Promise<Agent> {
     const modelData = AgentMapper.toModel(new Agent(data));
     const created = await AgentModel.create(modelData);
@@ -28,10 +27,18 @@ export class AuthRepository implements IAuthRepository {
     return AgentMapper.toEntities(result);
   }
 
-  async findExistingAgent({ phone, email, adhaar }: { phone?: string, email?: string, adhaar?: string }): Promise<Agent | null> {
-    const result = await AgentModel.findOne({ $or: [{ phone }, { email }, { adhaar }] });
+  async findExistingAgent({
+    phone,
+    email,
+    adhaar,
+  }: {
+    phone?: string;
+    email?: string;
+    adhaar?: string;
+  }): Promise<Agent | null> {
+    const result = await AgentModel.findOne({
+      $or: [{ phone }, { email }, { adhaar }],
+    });
     return result ? AgentMapper.toEntity(result) : null;
   }
-
-
 }

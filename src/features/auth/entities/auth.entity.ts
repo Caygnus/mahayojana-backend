@@ -11,7 +11,7 @@ export class Auth {
     return {
       id: this.id,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt,
     };
   }
 }

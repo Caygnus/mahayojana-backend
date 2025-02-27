@@ -49,7 +49,9 @@ export class OtpRepository implements IOtpRepository {
 
   async update(id: string, data: Partial<Otp>): Promise<Otp | null> {
     const modelData = OtpMapper.toModel(data);
-    const updated = await OtpModel.findByIdAndUpdate(id, modelData, { new: true });
+    const updated = await OtpModel.findByIdAndUpdate(id, modelData, {
+      new: true,
+    });
     return updated ? OtpMapper.toEntity(updated) : null;
   }
 

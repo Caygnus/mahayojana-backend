@@ -21,10 +21,10 @@ export class PoliciesMapper {
   }
 
   static toEntities(docs: IPoliciesDocument[]): Policies[] {
-    return docs.map(doc => this.toEntity(doc));
+    return docs.map((doc) => this.toEntity(doc));
   }
 
   static toModels(entities: Partial<Policies>[]): Partial<IPoliciesDocument>[] {
-    return entities.map(entity => this.toModel(entity));
+    return entities.map((entity) => this.toModel(entity));
   }
 }

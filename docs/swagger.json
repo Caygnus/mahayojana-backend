@@ -26,14 +26,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "date",
-              "boolean",
-              "object",
-              "array"
-            ],
+            "enum": ["string", "number", "date", "boolean", "object", "array"],
             "description": "Data type of the field"
           },
           "label": {
@@ -135,10 +128,7 @@
             "description": "Item definition for array type"
           }
         },
-        "required": [
-          "type",
-          "label"
-        ]
+        "required": ["type", "label"]
       },
       "Policy": {
         "type": "object",
@@ -251,10 +241,7 @@
             "description": "Agent password"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "SignupRequest": {
         "type": "object",
@@ -274,11 +261,7 @@
             "description": "Agent password"
           }
         },
-        "required": [
-          "name",
-          "email",
-          "password"
-        ]
+        "required": ["name", "email", "password"]
       },
       "TokenResponse": {
         "type": "object",
@@ -300,9 +283,7 @@
             "description": "Phone number to send OTP to"
           }
         },
-        "required": [
-          "phone"
-        ]
+        "required": ["phone"]
       },
       "Error": {
         "type": "object",
@@ -382,9 +363,7 @@
       },
       "UpdateSchemaRequest": {
         "type": "object",
-        "required": [
-          "schemaDefinition"
-        ],
+        "required": ["schemaDefinition"],
         "properties": {
           "schemaDefinition": {
             "type": "object",
@@ -397,9 +376,7 @@
       },
       "UpdateDynamicFieldsRequest": {
         "type": "object",
-        "required": [
-          "dynamicFields"
-        ],
+        "required": ["dynamicFields"],
         "properties": {
           "dynamicFields": {
             "type": "object",
@@ -427,9 +404,7 @@
       "post": {
         "summary": "Register a new agent",
         "description": "Create a new agent account",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
@@ -477,9 +452,7 @@
       "post": {
         "summary": "Login as an agent",
         "description": "Authenticate an agent and get a JWT token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
@@ -530,9 +503,7 @@
       "post": {
         "summary": "Generate and send OTP",
         "description": "Generates a one-time password and sends it to the provided phone number",
-        "tags": [
-          "OTP"
-        ],
+        "tags": ["OTP"],
         "requestBody": {
           "required": true,
           "content": {
@@ -573,9 +544,7 @@
     "/policies": {
       "post": {
         "summary": "Create a new policy",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -625,9 +594,7 @@
       },
       "get": {
         "summary": "Get all policies with pagination and filtering",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -750,9 +717,7 @@
     "/policies/{id}": {
       "get": {
         "summary": "Get a policy by ID",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -803,9 +768,7 @@
       },
       "put": {
         "summary": "Update a policy",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -909,9 +872,7 @@
       },
       "delete": {
         "summary": "Delete a policy",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -962,9 +923,7 @@
       "put": {
         "summary": "Update policy schema definition",
         "description": "Update the schema definition for dynamic fields of a policy",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []
@@ -1031,9 +990,7 @@
       "put": {
         "summary": "Update policy dynamic fields",
         "description": "Update the dynamic fields data for a policy",
-        "tags": [
-          "Policies"
-        ],
+        "tags": ["Policies"],
         "security": [
           {
             "BearerAuth": []

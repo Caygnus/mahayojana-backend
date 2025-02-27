@@ -29,7 +29,7 @@ export class PoliciesService implements IPoliciesService {
     const updated = await PoliciesModel.findByIdAndUpdate(
       id,
       { $set: policy },
-      { new: true }
+      { new: true },
     );
     if (!updated) throw new NotFoundError('Policy not found');
     return new Policies(updated.toJSON());
@@ -40,7 +40,16 @@ export class PoliciesService implements IPoliciesService {
     if (!deleted) throw new NotFoundError('Policy not found');
   }
 
-  async findAll(query: Record<string, any> = {}, page = 1, limit = 10): Promise<{ policies: Policies[], total: number, page: number, limit: number }> {
+  async findAll(
+    query: Record<string, any> = {},
+    page = 1,
+    limit = 10,
+  ): Promise<{
+    policies: Policies[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     const filters: Record<string, any> = {};
 
     if (query.policyType) filters.policyType = query.policyType;
@@ -49,7 +58,8 @@ export class PoliciesService implements IPoliciesService {
 
     if (query.startDate || query.endDate) {
       filters.policyStartDate = {};
-      if (query.startDate) filters.policyStartDate.$gte = new Date(query.startDate);
+      if (query.startDate)
+        filters.policyStartDate.$gte = new Date(query.startDate);
       if (query.endDate) filters.policyStartDate.$lte = new Date(query.endDate);
     }
 
@@ -61,19 +71,25 @@ export class PoliciesService implements IPoliciesService {
 
     const skip = (page - 1) * limit;
     const [policies, total] = await Promise.all([
-      PoliciesModel.find(filters).skip(skip).limit(limit).sort({ createdAt: -1 }),
-      PoliciesModel.countDocuments(filters)
+      PoliciesModel.find(filters)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 }),
+      PoliciesModel.countDocuments(filters),
     ]);
 
     return {
-      policies: policies.map(p => new Policies(p.toJSON())),
+      policies: policies.map((p) => new Policies(p.toJSON())),
       total,
       page,
-      limit
+      limit,
     };
   }
 
-  async updateSchema(id: string, schemaDefinition: Record<string, any>): Promise<Policies> {
+  async updateSchema(
+    id: string,
+    schemaDefinition: Record<string, any>,
+  ): Promise<Policies> {
     const policy = await PoliciesModel.findById(id);
     if (!policy) throw new NotFoundError('Policy not found');
 
@@ -84,14 +100,17 @@ export class PoliciesService implements IPoliciesService {
     return new Policies(updated.toJSON());
   }
 
-  async updateDynamicFields(id: string, dynamicFields: Record<string, any>): Promise<Policies> {
+  async updateDynamicFields(
+    id: string,
+    dynamicFields: Record<string, any>,
+  ): Promise<Policies> {
     const policy = await PoliciesModel.findById(id);
     if (!policy) throw new NotFoundError('Policy not found');
 
     const updated = await PoliciesModel.findByIdAndUpdate(
       id,
       { $set: { dynamicFields } },
-      { new: true }
+      { new: true },
     );
 
     return new Policies(updated!.toJSON());

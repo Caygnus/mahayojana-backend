@@ -58,6 +58,4 @@ const controller = new OtpController();
  */
 router.post('/', controller.create);
 
-
-
 export default router;

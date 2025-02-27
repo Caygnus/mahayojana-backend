@@ -4,18 +4,22 @@ import { JoiAuthBearer, JoiObjectId } from '../../../helpers/validator';
 // Validation for the dependency rule
 const dependencySchema = Joi.object({
   field: Joi.string().required(),
-  value: Joi.alternatives().try(
-    Joi.string(),
-    Joi.number(),
-    Joi.boolean(),
-    Joi.array().items(Joi.any())
-  ).required()
+  value: Joi.alternatives()
+    .try(
+      Joi.string(),
+      Joi.number(),
+      Joi.boolean(),
+      Joi.array().items(Joi.any()),
+    )
+    .required(),
 });
 
 // Enhanced schema for dynamic field definitions
 const dynamicFieldSchema = Joi.object({
   // Basic field properties
-  type: Joi.string().valid('string', 'number', 'date', 'boolean', 'object', 'array').required(),
+  type: Joi.string()
+    .valid('string', 'number', 'date', 'boolean', 'object', 'array')
+    .required(),
   label: Joi.string().required(),
   description: Joi.string(),
 
@@ -23,59 +27,73 @@ const dynamicFieldSchema = Joi.object({
   required: Joi.boolean().default(false),
 
   // String validations
-  minLength: Joi.number().integer().min(0).when('type', {
-    is: 'string',
-    then: Joi.number().integer().min(0),
-    otherwise: Joi.forbidden()
-  }),
-  maxLength: Joi.number().integer().min(0).when('type', {
-    is: 'string',
-    then: Joi.number().integer().min(0),
-    otherwise: Joi.forbidden()
-  }),
+  minLength: Joi.number()
+    .integer()
+    .min(0)
+    .when('type', {
+      is: 'string',
+      then: Joi.number().integer().min(0),
+      otherwise: Joi.forbidden(),
+    }),
+  maxLength: Joi.number()
+    .integer()
+    .min(0)
+    .when('type', {
+      is: 'string',
+      then: Joi.number().integer().min(0),
+      otherwise: Joi.forbidden(),
+    }),
   pattern: Joi.string().when('type', {
     is: 'string',
     then: Joi.string(),
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
-  enum: Joi.array().items(Joi.any()).when('type', {
-    is: 'string',
-    then: Joi.array().items(Joi.string()),
-    otherwise: Joi.forbidden()
-  }),
+  enum: Joi.array()
+    .items(Joi.any())
+    .when('type', {
+      is: 'string',
+      then: Joi.array().items(Joi.string()),
+      otherwise: Joi.forbidden(),
+    }),
 
   // Number validations
   min: Joi.number().when('type', {
     is: 'number',
     then: Joi.number(),
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
   max: Joi.number().when('type', {
     is: 'number',
     then: Joi.number(),
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
   step: Joi.number().positive().when('type', {
     is: 'number',
     then: Joi.number().positive(),
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
 
   // Array validations
-  minItems: Joi.number().integer().min(0).when('type', {
-    is: 'array',
-    then: Joi.number().integer().min(0),
-    otherwise: Joi.forbidden()
-  }),
-  maxItems: Joi.number().integer().min(0).when('type', {
-    is: 'array',
-    then: Joi.number().integer().min(0),
-    otherwise: Joi.forbidden()
-  }),
+  minItems: Joi.number()
+    .integer()
+    .min(0)
+    .when('type', {
+      is: 'array',
+      then: Joi.number().integer().min(0),
+      otherwise: Joi.forbidden(),
+    }),
+  maxItems: Joi.number()
+    .integer()
+    .min(0)
+    .when('type', {
+      is: 'array',
+      then: Joi.number().integer().min(0),
+      otherwise: Joi.forbidden(),
+    }),
   uniqueItems: Joi.boolean().when('type', {
     is: 'array',
     then: Joi.boolean(),
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
 
   // UI display properties
@@ -94,7 +112,7 @@ const dynamicFieldSchema = Joi.object({
 // Additional schemas for recursive types (object and array)
 const objectPropertiesSchema = Joi.object().pattern(
   Joi.string(),
-  Joi.link('#dynamicField')
+  Joi.link('#dynamicField'),
 );
 
 const arrayItemsSchema = Joi.link('#dynamicField');
@@ -105,13 +123,13 @@ dynamicFieldSchema.append({
   properties: Joi.when('type', {
     is: 'object',
     then: objectPropertiesSchema,
-    otherwise: Joi.forbidden()
+    otherwise: Joi.forbidden(),
   }),
   items: Joi.when('type', {
     is: 'array',
     then: arrayItemsSchema,
-    otherwise: Joi.forbidden()
-  })
+    otherwise: Joi.forbidden(),
+  }),
 });
 
 export class PoliciesValidation {
@@ -126,12 +144,9 @@ export class PoliciesValidation {
     policyAmount: Joi.number().required(),
     policyTerm: Joi.number().required(),
     // Enhanced schema definition for dynamic fields
-    schemaDefinition: Joi.object().pattern(
-      Joi.string(),
-      dynamicFieldSchema
-    ),
+    schemaDefinition: Joi.object().pattern(Joi.string(), dynamicFieldSchema),
     // Dynamic fields data - still keeps unknown(true) to allow any structure
-    dynamicFields: Joi.object().unknown(true)
+    dynamicFields: Joi.object().unknown(true),
   });
 
   static update = Joi.object({
@@ -145,12 +160,9 @@ export class PoliciesValidation {
     policyAmount: Joi.number(),
     policyTerm: Joi.number(),
     // Enhanced schema definition for dynamic fields
-    schemaDefinition: Joi.object().pattern(
-      Joi.string(),
-      dynamicFieldSchema
-    ),
+    schemaDefinition: Joi.object().pattern(Joi.string(), dynamicFieldSchema),
     // Dynamic fields data
-    dynamicFields: Joi.object().unknown(true)
+    dynamicFields: Joi.object().unknown(true),
   });
 
   static id = Joi.object({

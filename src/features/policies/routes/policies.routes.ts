@@ -128,10 +128,10 @@ const controller = new PoliciesController(new PoliciesService());
  *         description: Unauthorized
  */
 router.post(
-    '/',
-    authentication,
-    validator(PoliciesValidation.create),
-    asyncHandler(controller.create.bind(controller))
+  '/',
+  authentication,
+  validator(PoliciesValidation.create),
+  asyncHandler(controller.create.bind(controller)),
 );
 
 /**
@@ -216,10 +216,10 @@ router.post(
  *         description: Unauthorized
  */
 router.get(
-    '/',
-    authentication,
-    validator(PoliciesValidation.query, ValidationSource.QUERY),
-    asyncHandler(controller.findAll.bind(controller))
+  '/',
+  authentication,
+  validator(PoliciesValidation.query, ValidationSource.QUERY),
+  asyncHandler(controller.findAll.bind(controller)),
 );
 
 /**
@@ -259,10 +259,10 @@ router.get(
  *         description: Policy not found
  */
 router.get(
-    '/:id',
-    authentication,
-    validator(PoliciesValidation.id, ValidationSource.PARAM),
-    asyncHandler(controller.findById.bind(controller))
+  '/:id',
+  authentication,
+  validator(PoliciesValidation.id, ValidationSource.PARAM),
+  asyncHandler(controller.findById.bind(controller)),
 );
 
 /**
@@ -337,11 +337,11 @@ router.get(
  *         description: Policy not found
  */
 router.put(
-    '/:id',
-    authentication,
-    validator(PoliciesValidation.id, ValidationSource.PARAM),
-    validator(PoliciesValidation.update),
-    asyncHandler(controller.update.bind(controller))
+  '/:id',
+  authentication,
+  validator(PoliciesValidation.id, ValidationSource.PARAM),
+  validator(PoliciesValidation.update),
+  asyncHandler(controller.update.bind(controller)),
 );
 
 /**
@@ -379,10 +379,10 @@ router.put(
  *         description: Policy not found
  */
 router.delete(
-    '/:id',
-    authentication,
-    validator(PoliciesValidation.id, ValidationSource.PARAM),
-    asyncHandler(controller.delete.bind(controller))
+  '/:id',
+  authentication,
+  validator(PoliciesValidation.id, ValidationSource.PARAM),
+  asyncHandler(controller.delete.bind(controller)),
 );
 
 /**
@@ -431,10 +431,10 @@ router.delete(
  *         description: Policy not found
  */
 router.put(
-    '/:id/schema',
-    authentication,
-    validator(PoliciesValidation.id, ValidationSource.PARAM),
-    asyncHandler(controller.updateSchema.bind(controller))
+  '/:id/schema',
+  authentication,
+  validator(PoliciesValidation.id, ValidationSource.PARAM),
+  asyncHandler(controller.updateSchema.bind(controller)),
 );
 
 /**
@@ -483,10 +483,10 @@ router.put(
  *         description: Policy not found
  */
 router.put(
-    '/:id/fields',
-    authentication,
-    validator(PoliciesValidation.id, ValidationSource.PARAM),
-    asyncHandler(controller.updateDynamicFields.bind(controller))
+  '/:id/fields',
+  authentication,
+  validator(PoliciesValidation.id, ValidationSource.PARAM),
+  asyncHandler(controller.updateDynamicFields.bind(controller)),
 );
 
 export default router;

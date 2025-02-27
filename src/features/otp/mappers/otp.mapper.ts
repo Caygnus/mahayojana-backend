@@ -9,7 +9,7 @@ export class OtpMapper {
       updatedAt: doc.updatedAt,
       phone: doc.phone,
       code: doc.code,
-      expiresAt: doc.expiresAt
+      expiresAt: doc.expiresAt,
     });
   }
 
@@ -23,10 +23,10 @@ export class OtpMapper {
   }
 
   static toEntities(docs: IOtpDocument[]): Otp[] {
-    return docs.map(doc => this.toEntity(doc));
+    return docs.map((doc) => this.toEntity(doc));
   }
 
   static toModels(entities: Partial<Otp>[]): Partial<IOtpDocument>[] {
-    return entities.map(entity => this.toModel(entity));
+    return entities.map((entity) => this.toModel(entity));
   }
 }

@@ -34,5 +34,4 @@ export class LoginAgentDTO implements Partial<Agent> {
     if (!this.phone) throw new BadRequestError('Phone is required');
     if (!this.otp) throw new BadRequestError('OTP is required');
   }
-
 }

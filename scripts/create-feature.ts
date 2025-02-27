@@ -4,7 +4,9 @@ import path from 'path';
 const FEATURE_NAME = process.argv[2];
 
 // Get version from command line args or default to 1
-const VERSION = process.argv[3] ? parseInt(process.argv[3].replace('v', '')) : 1;
+const VERSION = process.argv[3]
+  ? parseInt(process.argv[3].replace('v', ''))
+  : 1;
 const VERSION_PREFIX = `v${VERSION}`;
 
 if (!FEATURE_NAME) {
@@ -16,11 +18,20 @@ if (!FEATURE_NAME) {
 
 // Convert feature name to different cases
 const featureNameKebab = FEATURE_NAME.toLowerCase().replace(/\s+/g, '-');
-const featureNamePascal = FEATURE_NAME.charAt(0).toUpperCase() +
-  FEATURE_NAME.slice(1).toLowerCase().replace(/[-\s](\w)/g, (_, c) => c.toUpperCase());
-const featureNameCamel = featureNamePascal.charAt(0).toLowerCase() + featureNamePascal.slice(1);
+const featureNamePascal =
+  FEATURE_NAME.charAt(0).toUpperCase() +
+  FEATURE_NAME.slice(1)
+    .toLowerCase()
+    .replace(/[-\s](\w)/g, (_, c) => c.toUpperCase());
+const featureNameCamel =
+  featureNamePascal.charAt(0).toLowerCase() + featureNamePascal.slice(1);
 
-const FEATURE_DIR = path.join(process.cwd(), 'src', 'features', featureNameKebab);
+const FEATURE_DIR = path.join(
+  process.cwd(),
+  'src',
+  'features',
+  featureNameKebab,
+);
 
 // Template for base repository interface
 const baseRepoInterfaceTemplate = `export interface IBaseRepository<T> {
@@ -377,11 +388,11 @@ const directories = [
   'interfaces',
   'repositories',
   'mappers',
-  'validations'
+  'validations',
 ];
 
 // Create directories
-directories.forEach(dir => {
+directories.forEach((dir) => {
   const dirPath = path.join(FEATURE_DIR, dir);
   fs.mkdirSync(dirPath, { recursive: true });
   console.log(`Created directory: ${dirPath}`);
@@ -400,56 +411,76 @@ if (!fs.existsSync(baseRepoPath)) {
 const files = [
   {
     path: path.join(FEATURE_DIR, 'entities', `${featureNameKebab}.entity.ts`),
-    content: entityTemplate
+    content: entityTemplate,
   },
   {
-    path: path.join(FEATURE_DIR, 'interfaces', `i-${featureNameKebab}.repository.ts`),
-    content: repoInterfaceTemplate
+    path: path.join(
+      FEATURE_DIR,
+      'interfaces',
+      `i-${featureNameKebab}.repository.ts`,
+    ),
+    content: repoInterfaceTemplate,
   },
   {
-    path: path.join(FEATURE_DIR, 'interfaces', `i-${featureNameKebab}.service.ts`),
-    content: serviceInterfaceTemplate
+    path: path.join(
+      FEATURE_DIR,
+      'interfaces',
+      `i-${featureNameKebab}.service.ts`,
+    ),
+    content: serviceInterfaceTemplate,
   },
   {
-    path: path.join(FEATURE_DIR, 'repositories', `${featureNameKebab}.repository.ts`),
-    content: repoImplementationTemplate
+    path: path.join(
+      FEATURE_DIR,
+      'repositories',
+      `${featureNameKebab}.repository.ts`,
+    ),
+    content: repoImplementationTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'mappers', `${featureNameKebab}.mapper.ts`),
-    content: mapperTemplate
+    content: mapperTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'dtos', `create-${featureNameKebab}.dto.ts`),
-    content: createDtoTemplate
+    content: createDtoTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'dtos', `update-${featureNameKebab}.dto.ts`),
-    content: updateDtoTemplate
+    content: updateDtoTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'models', `${featureNameKebab}.model.ts`),
-    content: modelTemplate
+    content: modelTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'services', `${featureNameKebab}.service.ts`),
-    content: serviceTemplate
+    content: serviceTemplate,
   },
   {
-    path: path.join(FEATURE_DIR, 'controllers', `${featureNameKebab}.controller.ts`),
-    content: controllerTemplate
+    path: path.join(
+      FEATURE_DIR,
+      'controllers',
+      `${featureNameKebab}.controller.ts`,
+    ),
+    content: controllerTemplate,
   },
   {
     path: path.join(FEATURE_DIR, 'routes', `${featureNameKebab}.routes.ts`),
-    content: routesTemplate
+    content: routesTemplate,
   },
   {
-    path: path.join(FEATURE_DIR, 'validations', `${featureNameKebab}.validation.ts`),
-    content: validationTemplate
-  }
+    path: path.join(
+      FEATURE_DIR,
+      'validations',
+      `${featureNameKebab}.validation.ts`,
+    ),
+    content: validationTemplate,
+  },
 ];
 
 // Create files
-files.forEach(file => {
+files.forEach((file) => {
   fs.writeFileSync(file.path, file.content);
   console.log(`Created file: ${file.path}`);
 });
@@ -481,11 +512,18 @@ export default router;
   const importStatement = `import ${featureNameKebab}Routes from '../../features/${featureNameKebab}/routes/${featureNameKebab}.routes';`;
   if (!versionContent.includes(importStatement)) {
     const lastImportIndex = versionContent.lastIndexOf('import');
-    const insertPosition = lastImportIndex === -1 ? 0 : versionContent.indexOf(';', lastImportIndex) + 1;
+    const insertPosition =
+      lastImportIndex === -1
+        ? 0
+        : versionContent.indexOf(';', lastImportIndex) + 1;
     const beforeImport = versionContent.substring(0, insertPosition);
     const afterImport = versionContent.substring(insertPosition);
 
-    versionContent = beforeImport + (insertPosition ? '\n' : '') + importStatement + afterImport;
+    versionContent =
+      beforeImport +
+      (insertPosition ? '\n' : '') +
+      importStatement +
+      afterImport;
   }
 
   // Add route registration if not exists
@@ -516,11 +554,15 @@ export default router;
   const versionImport = `import ${VERSION_PREFIX}Routes from './${VERSION_PREFIX}';`;
   if (!mainContent.includes(versionImport)) {
     const lastImportIndex = mainContent.lastIndexOf('import');
-    const insertPosition = lastImportIndex === -1 ? 0 : mainContent.indexOf(';', lastImportIndex) + 1;
+    const insertPosition =
+      lastImportIndex === -1
+        ? 0
+        : mainContent.indexOf(';', lastImportIndex) + 1;
     const beforeImport = mainContent.substring(0, insertPosition);
     const afterImport = mainContent.substring(insertPosition);
 
-    mainContent = beforeImport + (insertPosition ? '\n' : '') + versionImport + afterImport;
+    mainContent =
+      beforeImport + (insertPosition ? '\n' : '') + versionImport + afterImport;
   }
 
   // Add version route registration if not exists
@@ -543,9 +585,11 @@ export default router;
 // Update the routes file
 updateMainRoutes();
 
-console.log(`\nFeature '${featureNamePascal}' created successfully in version ${VERSION_PREFIX}!`);
+console.log(
+  `\nFeature '${featureNamePascal}' created successfully in version ${VERSION_PREFIX}!`,
+);
 console.log('\nNext steps:');
 console.log(`1. Add entity fields in: entities/${featureNameKebab}.entity.ts`);
 console.log(`2. Update mapper in: mappers/${featureNameKebab}.mapper.ts`);
 console.log(`3. Add schema fields in: models/${featureNameKebab}.model.ts`);
-console.log(`4. Add validation in DTOs`); 
+console.log(`4. Add validation in DTOs`);

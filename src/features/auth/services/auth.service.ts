@@ -24,7 +24,11 @@ export class AuthService implements IAuthService {
       throw new BadRequestError('Invalid OTP');
     }
 
-    const existingAgent = await this.repository.findExistingAgent({ phone: data.phone, email: data.email, adhaar: data.adhaar });
+    const existingAgent = await this.repository.findExistingAgent({
+      phone: data.phone,
+      email: data.email,
+      adhaar: data.adhaar,
+    });
     if (existingAgent) {
       throw new BadRequestError('Agent already exists');
     }
@@ -34,7 +38,6 @@ export class AuthService implements IAuthService {
   }
   async loginAgent(data: LoginAgentDTO): Promise<Agent> {
     data.validate();
-    
 
     const otpService = new OtpService();
     const isOtpValid = await otpService.verifyOtp(data.phone, data.otp);
@@ -43,7 +46,9 @@ export class AuthService implements IAuthService {
     }
     Logger.info(data.phone, data.otp);
 
-    const agent = await this.repository.findExistingAgent({ phone: data.phone });
+    const agent = await this.repository.findExistingAgent({
+      phone: data.phone,
+    });
     Logger.info('agent', agent);
     if (!agent) {
       throw new NotFoundError('Agent not found');
@@ -60,11 +65,13 @@ export class AuthService implements IAuthService {
       exp: new Date().getTime() + 1000 * 60 * 60 * 24 * 30,
       prm: JSON.stringify({
         id: agent.id,
-      })
+      }),
     });
   }
 
-  async validateToken(token: string): Promise<{ valid: boolean; agent: Agent | null }> {
+  async validateToken(
+    token: string,
+  ): Promise<{ valid: boolean; agent: Agent | null }> {
     try {
       const payload = await JWT.decode(token);
 
@@ -85,7 +92,7 @@ export class AuthService implements IAuthService {
 
       return {
         valid: !!agent,
-        agent
+        agent,
       };
     } catch (error) {
       return { valid: false, agent: null };
@@ -104,6 +111,4 @@ export class AuthService implements IAuthService {
   deleteAgent(id: string): Promise<Agent> {
     throw new Error('Method not implemented.');
   }
-
-
 }

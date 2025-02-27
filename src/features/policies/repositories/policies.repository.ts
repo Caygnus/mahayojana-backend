@@ -17,20 +17,26 @@ export class PoliciesRepository implements IPoliciesRepository {
   }
 
   async findOne(filter: Partial<Policies>): Promise<Policies | null> {
-    const modelFilter = PoliciesMapper.toModel(filter) as FilterQuery<IPoliciesDocument>;
+    const modelFilter = PoliciesMapper.toModel(
+      filter,
+    ) as FilterQuery<IPoliciesDocument>;
     const found = await PoliciesModel.findOne(modelFilter);
     return found ? PoliciesMapper.toEntity(found) : null;
   }
 
   async findMany(filter: Partial<Policies>): Promise<Policies[]> {
-    const modelFilter = PoliciesMapper.toModel(filter) as FilterQuery<IPoliciesDocument>;
+    const modelFilter = PoliciesMapper.toModel(
+      filter,
+    ) as FilterQuery<IPoliciesDocument>;
     const found = await PoliciesModel.find(modelFilter);
     return PoliciesMapper.toEntities(found);
   }
 
   async update(id: string, data: Partial<Policies>): Promise<Policies | null> {
     const modelData = PoliciesMapper.toModel(data);
-    const updated = await PoliciesModel.findByIdAndUpdate(id, modelData, { new: true });
+    const updated = await PoliciesModel.findByIdAndUpdate(id, modelData, {
+      new: true,
+    });
     return updated ? PoliciesMapper.toEntity(updated) : null;
   }
 
@@ -40,7 +46,9 @@ export class PoliciesRepository implements IPoliciesRepository {
   }
 
   async exists(filter: Partial<Policies>): Promise<boolean> {
-    const modelFilter = PoliciesMapper.toModel(filter) as FilterQuery<IPoliciesDocument>;
+    const modelFilter = PoliciesMapper.toModel(
+      filter,
+    ) as FilterQuery<IPoliciesDocument>;
     const result = await PoliciesModel.exists(modelFilter);
     return !!result;
   }
