@@ -8,4 +8,5 @@ export interface IAuthService {
   getAgentById(id: string): Promise<Agent>
   getAllAgents(): Promise<Agent[]>
   deleteAgent(id: string): Promise<Agent>
+  generateToken(agent: Agent): Promise<string>
 }

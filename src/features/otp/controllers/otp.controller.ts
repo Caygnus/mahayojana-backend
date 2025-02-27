@@ -18,8 +18,9 @@ export class OtpController {
       const data = new CreateOtpDTO(req.body);
       await this.service.createOtp(data);
 
-      new SuccessMsgResponse('Otp created successfully').send(res);
+      new SuccessMsgResponse('Otp sent successfully').send(res);
     })
   ];
+  
 
 }

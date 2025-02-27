@@ -8,4 +8,5 @@ export interface IAuthRepository {
   findAgentById(id: string): Promise<Agent | null>
   // updateAgent(id: string, data: UpdateAgentDTO): Promise<Agent | null>
   findAllAgents(): Promise<Agent[]>
+  findExistingAgent({ phone, email, adhaar }: { phone?: string, email?: string, adhaar?: string }): Promise<Agent | null>
 }

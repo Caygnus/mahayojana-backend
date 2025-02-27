@@ -8,6 +8,8 @@ import { NotFoundError } from './core/ApiError';
 import { environment } from './config';
 import cors from 'cors';
 import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './utils/swagger';
 
 // Load environment variables
 import './database';
@@ -29,6 +31,12 @@ app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
+
+// Swagger UI
+if (environment !== 'production') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
+  Logger.info('Swagger UI available at /api-docs');
+}
 
 // Routes
 app.use('/', routes);

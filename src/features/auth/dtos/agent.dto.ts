@@ -24,7 +24,7 @@ export class CreateAgentDTO implements Partial<Agent> {
 
 export class LoginAgentDTO implements Partial<Agent> {
   phone!: string;
-  password!: string;
+  otp!: string;
 
   constructor(data: Partial<LoginAgentDTO>) {
     Object.assign(this, data);
@@ -32,7 +32,7 @@ export class LoginAgentDTO implements Partial<Agent> {
 
   validate(): void {
     if (!this.phone) throw new BadRequestError('Phone is required');
-    if (!this.password) throw new BadRequestError('Password is required');
+    if (!this.otp) throw new BadRequestError('OTP is required');
   }
 
 }

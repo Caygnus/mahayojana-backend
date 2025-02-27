@@ -28,5 +28,10 @@ export class AuthRepository implements IAuthRepository {
     return AgentMapper.toEntities(result);
   }
 
+  async findExistingAgent({ phone, email, adhaar }: { phone?: string, email?: string, adhaar?: string }): Promise<Agent | null> {
+    const result = await AgentModel.findOne({ $or: [{ phone }, { email }, { adhaar }] });
+    return result ? AgentMapper.toEntity(result) : null;
+  }
+
 
 }
