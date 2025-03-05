@@ -70,4 +70,4 @@ app.use(((err: Error, req: Request, res: Response, next: NextFunction) => {
   }
 }) as ErrorRequestHandler);
 
-export default app;
+export default app
