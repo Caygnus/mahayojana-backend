@@ -6,8 +6,14 @@ export interface IPolicyDocument extends Document {
   updatedAt: Date;
 }
 
-const PolicySchema = new Schema({
-  // Add your schema fields here
-}, { timestamps: true });
+const PolicySchema = new Schema(
+  {
+    // Add your schema fields here
+  },
+  { timestamps: true },
+);
 
-export const PolicyModel = mongoose.model<IPolicyDocument>('Policy', PolicySchema);
+export const PolicyModel = mongoose.model<IPolicyDocument>(
+  'Policy',
+  PolicySchema,
+);
