@@ -22,9 +22,22 @@ export class PolicyValidation {
           'string.empty': 'Field ID cannot be empty',
           'any.required': 'Field ID is required',
         }),
-        field_type: Joi.string().required().messages({
+        field_type: Joi.string().required().valid(
+          'text',
+          'number',
+          'date',
+          'select',
+          'radio',
+          'checkbox',
+          'textarea',
+          'email',
+          'phone',
+          'password',
+          'file'
+        ).messages({
           'string.empty': 'Field type cannot be empty',
           'any.required': 'Field type is required',
+          'any.only': 'Field type must be one of: text, number, date, select, radio, checkbox, textarea, email, phone, password, file'
         }),
         field_label: Joi.string().required().messages({
           'string.empty': 'Field label cannot be empty',
