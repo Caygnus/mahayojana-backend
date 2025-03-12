@@ -5,9 +5,7 @@ export class PolicyMapper {
   static toEntity(doc: IPolicyDocument): Policy {
     return new Policy({
       id: doc._id.toString(),
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
-      // Add other fields here
+      ...doc.toObject(),
     });
   }
 

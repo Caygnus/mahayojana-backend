@@ -3,7 +3,7 @@ import { IPolicyRepository } from '../interfaces/i-policy.repository';
 import { PolicyRepository } from '../repositories/policy.repository';
 import { CreatePolicyDTO } from '../dtos/create-policy.dto';
 import { UpdatePolicyDTO } from '../dtos/update-policy.dto';
-import { Policy } from '../entities/policy.entity';
+import { Policy, PolicyStatus } from '../entities/policy.entity';
 
 export class PolicyService implements IPolicyService {
   private repository: IPolicyRepository;
@@ -14,7 +14,28 @@ export class PolicyService implements IPolicyService {
 
   async create(data: CreatePolicyDTO): Promise<Policy> {
     data.validate();
-    return this.repository.create(data);
+
+    const newPolicy = new Policy({
+      title: data.title,
+      description: data.description,
+      fields: data.fields,
+      policy_type: data.policy_type,
+      filling_charge: data.filling_charge,
+      currency: data.currency,
+      discount_percentage: data.discount_percentage,
+      discount_amount: data.discount_amount,
+      tax_percentage: data.tax_percentage,
+      tax_amount: data.tax_amount,
+      agent_commission_percentage: data.agent_commission_percentage,
+      agent_commission_amount: data.agent_commission_amount,
+      agent_commission_allowed: data.agent_commission_allowed,
+      expiration_date: data.expiration_date,
+      rules: data.rules,
+      benefits: data.benefits,
+      status: PolicyStatus.ACTIVE,
+    });
+
+    return this.repository.create(newPolicy);
   }
 
   async findById(id: string): Promise<Policy | null> {

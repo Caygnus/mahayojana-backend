@@ -70,8 +70,8 @@ export class Policy {
 
   // payment fields
   fields?: PolicyField[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   constructor(data: Partial<Policy>) {
     Object.assign(this, data);

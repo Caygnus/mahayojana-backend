@@ -2,7 +2,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { Policy, PolicyField } from '../entities/policy.entity';
 
 export interface IPolicyDocument
-  extends Omit<Policy, 'toJSON' | 'toObject' | 'id'>,
+  extends Omit<
+      Policy,
+      'toJSON' | 'toObject' | 'id' | 'created_at' | 'updated_at'
+    >,
     Document {
   _id: mongoose.Types.ObjectId;
 }
@@ -127,7 +130,22 @@ const PolicySchema = new Schema<IPolicyDocument>(
       default: [],
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toObject: {
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        ret.created_at = ret.createdAt;
+        ret.updated_at = ret.updatedAt;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        return ret;
+      },
+    },
+    toJSON: { virtuals: true },
+  },
 );
 
 export const PolicyModel = mongoose.model<IPolicyDocument>(

@@ -36,8 +36,6 @@ export default (
   ) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      Logger.info(`validating ${source}`);
-
       let dataToValidate: any;
 
       if (source === ValidationSource.HEADER) {
@@ -45,12 +43,13 @@ export default (
         dataToValidate = {
           authorization: req.headers.authorization || req.headers.Authorization,
         };
-        Logger.info(
-          `Validating headers with: ${JSON.stringify(dataToValidate)}`,
-        );
       } else {
         dataToValidate = req[source];
       }
+
+      Logger.info(
+        `Validating ${source} with: ${JSON.stringify(dataToValidate)}`,
+      );
 
       const validationOptions = {
         allowUnknown: true, // Allow unknown fields
@@ -58,7 +57,6 @@ export default (
       };
 
       const { error } = schema.validate(dataToValidate, validationOptions);
-      Logger.info(`Validation error: ${JSON.stringify(error)}`);
 
       if (!error) return next();
 
