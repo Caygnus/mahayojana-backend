@@ -31,9 +31,9 @@ export const JoiAuthBearer = () =>
   }, 'Authorization Header Validation');
 
 export default (
-  schema: Joi.AnySchema,
-  source: ValidationSource = ValidationSource.BODY,
-) =>
+    schema: Joi.AnySchema,
+    source: ValidationSource = ValidationSource.BODY,
+  ) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       Logger.info(`validating ${source}`);
@@ -43,9 +43,11 @@ export default (
       if (source === ValidationSource.HEADER) {
         // For headers, only validate the specific fields we care about
         dataToValidate = {
-          authorization: req.headers.authorization || req.headers.Authorization
+          authorization: req.headers.authorization || req.headers.Authorization,
         };
-        Logger.info(`Validating headers with: ${JSON.stringify(dataToValidate)}`);
+        Logger.info(
+          `Validating headers with: ${JSON.stringify(dataToValidate)}`,
+        );
       } else {
         dataToValidate = req[source];
       }

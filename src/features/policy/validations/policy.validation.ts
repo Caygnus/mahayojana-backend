@@ -2,28 +2,29 @@ import Joi from 'joi';
 import { JoiAuthBearer, JoiObjectId } from '../../../helpers/validator';
 import { CreatePolicyDTO } from '../dtos/create-policy.dto';
 
-
 export class PolicyValidation {
   static create = Joi.object<CreatePolicyDTO>({
     title: Joi.string().required(),
     description: Joi.string(),
-    fields: Joi.array().items(Joi.object({
-      name: Joi.string().required(),
-      field_id: Joi.string().required(),
-      field_type: Joi.string().required(),
-      field_label: Joi.string().required(),
-      field_placeholder: Joi.string(),
-      field_description: Joi.string(),
-      field_options: Joi.array().items(Joi.string()),
-      field_default_value: Joi.string(),
-      field_regex: Joi.string(),
-      field_regex_message: Joi.string(),
-      field_min_length: Joi.number(),
-      field_max_length: Joi.number(),
-      field_min_value: Joi.number(),
-      field_max_value: Joi.number(),
-      field_required: Joi.boolean(),
-    })),
+    fields: Joi.array().items(
+      Joi.object({
+        name: Joi.string().required(),
+        field_id: Joi.string().required(),
+        field_type: Joi.string().required(),
+        field_label: Joi.string().required(),
+        field_placeholder: Joi.string(),
+        field_description: Joi.string(),
+        field_options: Joi.array().items(Joi.string()),
+        field_default_value: Joi.string(),
+        field_regex: Joi.string(),
+        field_regex_message: Joi.string(),
+        field_min_length: Joi.number(),
+        field_max_length: Joi.number(),
+        field_min_value: Joi.number(),
+        field_max_value: Joi.number(),
+        field_required: Joi.boolean(),
+      }),
+    ),
     policy_type: Joi.string(),
     filling_charge: Joi.number(),
     currency: Joi.string(),

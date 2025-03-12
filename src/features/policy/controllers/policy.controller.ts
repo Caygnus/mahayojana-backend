@@ -24,7 +24,7 @@ export class PolicyController {
 
       const result = await this.service.create(data);
       res.status(201).json(result);
-    })
+    }),
   ];
 
   findById = [
@@ -37,7 +37,7 @@ export class PolicyController {
         return res.status(404).json({ error: 'Policy not found' });
       }
       res.json(result);
-    })
+    }),
   ];
 
   update = [
@@ -52,7 +52,7 @@ export class PolicyController {
         return res.status(404).json({ error: 'Policy not found' });
       }
       res.json(result);
-    })
+    }),
   ];
 
   delete = [
@@ -65,7 +65,7 @@ export class PolicyController {
         return res.status(404).json({ error: 'Policy not found' });
       }
       res.status(204).send();
-    })
+    }),
   ];
 
   list = [
@@ -75,6 +75,6 @@ export class PolicyController {
       const filter = req.query;
       const results = await this.service.list(filter);
       res.json(results);
-    })
+    }),
   ];
 }

@@ -148,7 +148,7 @@ const directories = [
   'controllers',
   'routes',
   'interfaces',
-  'repositories'
+  'repositories',
 ];
 
 // Create directories

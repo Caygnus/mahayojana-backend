@@ -18,7 +18,7 @@ export class CreatePolicyDTO implements Partial<Policy> {
   expiration_date?: Date;
   rules?: string[];
   benefits?: string[];
-  
+
   constructor(data: Partial<CreatePolicyDTO>) {
     Object.assign(this, data);
   }
@@ -26,4 +26,4 @@ export class CreatePolicyDTO implements Partial<Policy> {
   validate(): void {
     // Add validation logic here
   }
-} 
+}

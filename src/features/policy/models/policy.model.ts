@@ -1,68 +1,72 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Policy, PolicyField } from '../entities/policy.entity';
 
-export interface IPolicyDocument extends Omit<Policy, 'toJSON' | 'toObject' | 'id'>, Document {
+export interface IPolicyDocument
+  extends Omit<Policy, 'toJSON' | 'toObject' | 'id'>,
+    Document {
   _id: mongoose.Types.ObjectId;
 }
 
-const PolicyFieldSchema = new Schema<PolicyField>({
-  name: {
-    type: String,
-    required: true,
+const PolicyFieldSchema = new Schema<PolicyField>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    field_id: {
+      type: String,
+      required: true,
+    },
+    field_type: {
+      type: String,
+      required: true,
+    },
+    field_label: {
+      type: String,
+      required: true,
+    },
+    field_placeholder: {
+      type: String,
+    },
+    field_description: {
+      type: String,
+    },
+    field_options: {
+      type: [String],
+    },
+    field_default_value: {
+      type: String,
+    },
+    field_required: {
+      type: Boolean,
+      default: false,
+    },
+    field_min_length: {
+      type: Number,
+    },
+    field_max_length: {
+      type: Number,
+    },
+    field_min_value: {
+      type: Number,
+    },
+    field_max_value: {
+      type: Number,
+    },
+    field_regex: {
+      type: String,
+    },
+    field_regex_message: {
+      type: String,
+    },
   },
-  field_id: {
-    type: String,
-    required: true,
+  {
+    _id: false,
   },
-  field_type: {
-    type: String,
-    required: true,
-  },
-  field_label: {
-    type: String,
-    required: true,
-  },
-  field_placeholder: {
-    type: String,
-  },
-  field_description: {
-    type: String,
-  },
-  field_options: {
-    type: [String],
-  },
-  field_default_value: {
-    type: String,
-  },
-  field_required: {
-    type: Boolean,
-    default: false,
-  },
-  field_min_length: {
-    type: Number,
-  },
-  field_max_length: {
-    type: Number,
-  },
-  field_min_value: {
-    type: Number,
-  },
-  field_max_value: {
-    type: Number,
-  },
-  field_regex: {
-    type: String,
-  },
-  field_regex_message: {
-    type: String,
-  },
-}, {
-  _id: false,
-});
+);
 
 const PolicySchema = new Schema<IPolicyDocument>(
   {
-
     title: {
       type: String,
       required: true,

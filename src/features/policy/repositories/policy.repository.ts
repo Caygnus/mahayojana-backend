@@ -17,20 +17,26 @@ export class PolicyRepository implements IPolicyRepository {
   }
 
   async findOne(filter: Partial<Policy>): Promise<Policy | null> {
-    const modelFilter = PolicyMapper.toModel(filter) as FilterQuery<IPolicyDocument>;
+    const modelFilter = PolicyMapper.toModel(
+      filter,
+    ) as FilterQuery<IPolicyDocument>;
     const found = await PolicyModel.findOne(modelFilter);
     return found ? PolicyMapper.toEntity(found) : null;
   }
 
   async findMany(filter: Partial<Policy>): Promise<Policy[]> {
-    const modelFilter = PolicyMapper.toModel(filter) as FilterQuery<IPolicyDocument>;
+    const modelFilter = PolicyMapper.toModel(
+      filter,
+    ) as FilterQuery<IPolicyDocument>;
     const found = await PolicyModel.find(modelFilter);
     return PolicyMapper.toEntities(found);
   }
 
   async update(id: string, data: Partial<Policy>): Promise<Policy | null> {
     const modelData = PolicyMapper.toModel(data);
-    const updated = await PolicyModel.findByIdAndUpdate(id, modelData, { new: true });
+    const updated = await PolicyModel.findByIdAndUpdate(id, modelData, {
+      new: true,
+    });
     return updated ? PolicyMapper.toEntity(updated) : null;
   }
 
@@ -40,7 +46,9 @@ export class PolicyRepository implements IPolicyRepository {
   }
 
   async exists(filter: Partial<Policy>): Promise<boolean> {
-    const modelFilter = PolicyMapper.toModel(filter) as FilterQuery<IPolicyDocument>;
+    const modelFilter = PolicyMapper.toModel(
+      filter,
+    ) as FilterQuery<IPolicyDocument>;
     const result = await PolicyModel.exists(modelFilter);
     return !!result;
   }

@@ -1,4 +1,3 @@
-
 export enum PolicyStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
@@ -18,7 +17,6 @@ export enum PolicyFieldType {
   FILE = 'file',
   IMAGE = 'image',
 }
-
 
 export interface PolicyField {
   name: string;
@@ -44,11 +42,7 @@ export interface PolicyField {
   field_regex_message?: string;
 }
 
-
-
-
 export class Policy {
-
   // required fields
   id!: string;
   title!: string;
