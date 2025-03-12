@@ -10,6 +10,7 @@ import cors from 'cors';
 import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './utils/swagger';
+import requestLoggingMiddleware from './core/RequestLogger';
 
 // Load environment variables
 import './database';
@@ -31,6 +32,9 @@ app.use(
   express.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }),
 );
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
+
+// Request logging middleware
+// app.use(requestLoggingMiddleware);
 
 // Swagger UI
 // if (environment !== 'production') {

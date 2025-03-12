@@ -47,24 +47,70 @@ import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
 
 export interface I${featureNamePascal}Repository extends IBaseRepository<${featureNamePascal}> {}`;
 
-// Template for service interface
+// Template for repository implementation
+const repoImplementationTemplate = `import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
+import { ${featureNamePascal}Model } from '../models/${featureNameKebab}.model';
+import { I${featureNamePascal}Repository } from '../interfaces/i-${featureNameKebab}.repository';
+
+export class ${featureNamePascal}Repository implements I${featureNamePascal}Repository {
+  async create(data: Partial<${featureNamePascal}>): Promise<${featureNamePascal}> {
+    throw new Error('Method not implemented.');
+  }
+
+  async findById(id: string): Promise<${featureNamePascal} | null> {
+    throw new Error('Method not implemented.');
+  }
+
+  async findOne(filter: Partial<${featureNamePascal}>): Promise<${featureNamePascal} | null> {
+    throw new Error('Method not implemented.');
+  }
+
+  async findMany(filter: Partial<${featureNamePascal}>): Promise<${featureNamePascal}[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  async update(id: string, data: Partial<${featureNamePascal}>): Promise<${featureNamePascal} | null> {
+    throw new Error('Method not implemented.');
+  }
+
+  async delete(id: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  async exists(filter: Partial<${featureNamePascal}>): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+}`;
+
+// Template for service interface (simplified)
 const serviceInterfaceTemplate = `import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
 
 export interface I${featureNamePascal}Service {
-  create(data: Partial<${featureNamePascal}>): Promise<${featureNamePascal}>;
-  findById(id: string): Promise<${featureNamePascal} | null>;
-  update(id: string, data: Partial<${featureNamePascal}>): Promise<${featureNamePascal} | null>;
-  delete(id: string): Promise<boolean>;
-  list(filter?: Partial<${featureNamePascal}>): Promise<${featureNamePascal}[]>;
+  // Add your service methods here
+}`;
+
+// Template for service (empty)
+const serviceTemplate = `import { I${featureNamePascal}Service } from '../interfaces/i-${featureNameKebab}.service';
+import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
+import { I${featureNamePascal}Repository } from '../interfaces/i-${featureNameKebab}.repository';
+import { ${featureNamePascal}Repository } from '../repositories/${featureNameKebab}.repository';
+
+export class ${featureNamePascal}Service implements I${featureNamePascal}Service {
+  private repository: I${featureNamePascal}Repository;
+
+  constructor() {
+    this.repository = new ${featureNamePascal}Repository();
+  }
+  
+  // Add your service methods here
 }`;
 
 // Template for model
 const modelTemplate = `import mongoose, { Schema, Document } from 'mongoose';
 import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
 
-export interface I${featureNamePascal}Document extends Document {
-  createdAt: Date;
-  updatedAt: Date;
+export interface I${featureNamePascal}Document extends Omit<${featureNamePascal}, 'toJSON' | 'toObject' | 'id'>, Document {
+  _id: mongoose.Types.ObjectId;
 }
 
 const ${featureNamePascal}Schema = new Schema({
@@ -85,32 +131,6 @@ export class ${featureNamePascal}Controller {
   }
 }`;
 
-// Template for service (minimal)
-const serviceTemplate = `import { I${featureNamePascal}Service } from '../interfaces/i-${featureNameKebab}.service';
-import { ${featureNamePascal} } from '../entities/${featureNameKebab}.entity';
-
-export class ${featureNamePascal}Service implements I${featureNamePascal}Service {
-  async create(data: Partial<${featureNamePascal}>): Promise<${featureNamePascal}> {
-    throw new Error('Method not implemented.');
-  }
-
-  async findById(id: string): Promise<${featureNamePascal} | null> {
-    throw new Error('Method not implemented.');
-  }
-
-  async update(id: string, data: Partial<${featureNamePascal}>): Promise<${featureNamePascal} | null> {
-    throw new Error('Method not implemented.');
-  }
-
-  async delete(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-
-  async list(filter?: Partial<${featureNamePascal}>): Promise<${featureNamePascal}[]> {
-    throw new Error('Method not implemented.');
-  }
-}`;
-
 // Template for routes (minimal)
 const routesTemplate = `import { Router } from 'express';
 import { ${featureNamePascal}Controller } from '../controllers/${featureNameKebab}.controller';
@@ -128,6 +148,7 @@ const directories = [
   'controllers',
   'routes',
   'interfaces',
+  'repositories'
 ];
 
 // Create directories
@@ -150,6 +171,14 @@ const files = [
       `i-${featureNameKebab}.repository.ts`,
     ),
     content: repoInterfaceTemplate,
+  },
+  {
+    path: path.join(
+      FEATURE_DIR,
+      'repositories',
+      `${featureNameKebab}.repository.ts`,
+    ),
+    content: repoImplementationTemplate,
   },
   {
     path: path.join(

@@ -15,6 +15,7 @@
     "clean": "rimraf ./build",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
+    "dev": "npm run watch",
     "check": "tsc --noEmit",
     "eslint": "eslint . --ext .js,.ts",
     "upgrade": "npm update --save-dev && npm update --save",

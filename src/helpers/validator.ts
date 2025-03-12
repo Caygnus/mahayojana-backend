@@ -2,6 +2,7 @@ import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 import { BadRequestError } from '../core/ApiError';
 import { Types } from 'mongoose';
+import Logger from '../core/Logger';
 
 export enum ValidationSource {
   BODY = 'body',
@@ -30,12 +31,32 @@ export const JoiAuthBearer = () =>
   }, 'Authorization Header Validation');
 
 export default (
-    schema: Joi.AnySchema,
-    source: ValidationSource = ValidationSource.BODY,
-  ) =>
+  schema: Joi.AnySchema,
+  source: ValidationSource = ValidationSource.BODY,
+) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error } = schema.validate(req[source]);
+      Logger.info(`validating ${source}`);
+
+      let dataToValidate: any;
+
+      if (source === ValidationSource.HEADER) {
+        // For headers, only validate the specific fields we care about
+        dataToValidate = {
+          authorization: req.headers.authorization || req.headers.Authorization
+        };
+        Logger.info(`Validating headers with: ${JSON.stringify(dataToValidate)}`);
+      } else {
+        dataToValidate = req[source];
+      }
+
+      const validationOptions = {
+        allowUnknown: true, // Allow unknown fields
+        abortEarly: false, // Return all errors
+      };
+
+      const { error } = schema.validate(dataToValidate, validationOptions);
+      Logger.info(`Validation error: ${JSON.stringify(error)}`);
 
       if (!error) return next();
 
