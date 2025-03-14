@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import asyncHandler from '../../../helpers/asyncHandler';
 import validator, { ValidationSource } from '../../../helpers/validator';
 import { PolicyService } from '../services/policy.service';
@@ -16,7 +16,7 @@ export class PolicyController {
 
   /**
    * @swagger
-   * /v1/policy:
+   * /policy:
    *   post:
    *     summary: Create a new policy
    *     description: Creates a new insurance policy with all its details and fields
@@ -226,7 +226,7 @@ export class PolicyController {
 
   /**
    * @swagger
-   * /v1/policy/{id}:
+   * /policy/{id}:
    *   get:
    *     summary: Get policy by ID
    *     description: Retrieves a specific policy by its unique identifier
