@@ -23,8 +23,8 @@ export class ApplicationService implements IApplicationService {
     if (existingApplication) {
       throw new BadRequestError('Application already exists');
     }
-    
-    const Application =  this.repository.createApplication(data);
+
+    const Application = this.repository.createApplication(data);
     return Application;
   }
 
@@ -34,8 +34,10 @@ export class ApplicationService implements IApplicationService {
   ): Promise<Application | null> {
     data.validate();
 
-    const existingApplication = await this.repository.getApplicationById({ id });
-  
+    const existingApplication = await this.repository.getApplicationById({
+      id,
+    });
+
     if (!existingApplication) {
       throw new BadRequestError('Application not found');
     }
@@ -43,12 +45,12 @@ export class ApplicationService implements IApplicationService {
     const updatedData = new UpdateApplicationDTO({
       ...existingApplication,
       ...data,
-      fields: data.fields || existingApplication.fields
+      fields: data.fields || existingApplication.fields,
     });
 
     updatedData.validate();
 
-    const Application =  this.repository.updateApplication(id, updatedData);
+    const Application = this.repository.updateApplication(id, updatedData);
     return Application;
   }
 
@@ -59,7 +61,7 @@ export class ApplicationService implements IApplicationService {
   async listApplications(
     filter?: Partial<Application>,
   ): Promise<Application[]> {
-    const Application =  this.repository.listApplications(filter || {});
+    const Application = this.repository.listApplications(filter || {});
     return Application;
   }
 }

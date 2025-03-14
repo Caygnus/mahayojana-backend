@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 
 export enum FieldType {
   TEXT = 'text',
@@ -37,8 +37,6 @@ export class Application {
   // dynamic fields
   fields!: Field[];
 
-
-
   constructor(data: Partial<Application>) {
     Object.assign(this, data);
   }
@@ -47,7 +45,7 @@ export class Application {
     return {
       id: this.id,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt,
     };
   }
 }

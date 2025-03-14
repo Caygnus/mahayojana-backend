@@ -32,16 +32,16 @@ export class ApplicationRepository implements IApplicationRepository {
   }
 
   async findExistingApplication({
-      title,
-    }: {
-      title?: string;
+    title,
+  }: {
+    title?: string;
   }): Promise<Application | null> {
     const result = await ApplicationModel.findOne({
       $or: [{ title }],
     });
     return result ? ApplicationMapper.toEntity(result) : null;
   }
-  
+
   async getApplicationById({
     id,
   }: {
@@ -52,5 +52,4 @@ export class ApplicationRepository implements IApplicationRepository {
     });
     return result ? ApplicationMapper.toEntity(result) : null;
   }
-  
 }
