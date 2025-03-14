@@ -2,6 +2,7 @@ import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 import { BadRequestError } from '../core/ApiError';
 import { Types } from 'mongoose';
+import Logger from '../core/Logger';
 
 export enum ValidationSource {
   BODY = 'body',
@@ -35,7 +36,27 @@ export default (
   ) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error } = schema.validate(req[source]);
+      let dataToValidate: any;
+
+      if (source === ValidationSource.HEADER) {
+        // For headers, only validate the specific fields we care about
+        dataToValidate = {
+          authorization: req.headers.authorization || req.headers.Authorization,
+        };
+      } else {
+        dataToValidate = req[source];
+      }
+
+      Logger.info(
+        `Validating ${source} with: ${JSON.stringify(dataToValidate)}`,
+      );
+
+      const validationOptions = {
+        allowUnknown: true, // Allow unknown fields
+        abortEarly: false, // Return all errors
+      };
+
+      const { error } = schema.validate(dataToValidate, validationOptions);
 
       if (!error) return next();
 
