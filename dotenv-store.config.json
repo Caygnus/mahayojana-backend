@@ -1,7 +1,6 @@
 {
-  "env-filepath": ".env",
-  "store-file-path": ".env.store",
-  "decrypted-file-path": ".env.store.decrypted",
-  "key-file-path": ".env.store.key",
+  "file": ".env.store",
+  "output": ".env.store.enc",
+  "envFile": ".env",
   "algorithm": "aes"
 }
