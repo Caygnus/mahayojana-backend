@@ -37,7 +37,9 @@ temp
 
 *.save
 *.save.*
-.env*
+# .env*
 .flaskenv*
 !.env.project
 !.env.vault
+# dotenv-store encryption key
+.env.store.key
