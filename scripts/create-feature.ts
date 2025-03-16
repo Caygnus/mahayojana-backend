@@ -217,7 +217,7 @@ export interface I${featureNamePascal}Document extends Omit<${featureNamePascal}
   _id: mongoose.Types.ObjectId;
 }
 
-const ${featureNamePascal}Schema = new Schema({
+const ${featureNamePascal}Schema = new Schema<I${featureNamePascal}Document>({
   // Add your schema fields here
 }, {
   timestamps: true,
