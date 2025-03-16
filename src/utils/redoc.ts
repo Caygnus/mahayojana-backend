@@ -1,6 +1,5 @@
-import { RedocOptions } from 'redoc';
 
-export const redocOptions: RedocOptions = {
+export const redocOptions = {
   title: 'Mahayojana API Documentation',
   theme: {
     colors: {
