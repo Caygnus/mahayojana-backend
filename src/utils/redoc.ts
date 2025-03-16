@@ -1,4 +1,3 @@
-
 export const redocOptions = {
   title: 'Mahayojana API Documentation',
   theme: {
