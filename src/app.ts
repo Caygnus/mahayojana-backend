@@ -10,6 +10,7 @@ import cors from 'cors';
 import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './utils/swagger';
+import { redocOptions } from './utils/redoc';
 
 // Load environment variables
 import './database';
@@ -33,10 +34,6 @@ app.use(
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 // Swagger UI
-// if (environment !== 'production') {
-
-// }
-
 app.use(
   '/api-docs',
   swaggerUi.serve,
@@ -44,10 +41,50 @@ app.use(
 );
 Logger.info('Swagger UI available at /api-docs');
 
+// Serve Redoc UI at /redoc
+app.get('/redoc', (req, res) => {
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>${redocOptions.title}</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Inter:400,600|Source+Code+Pro:400" rel="stylesheet">
+        <style>
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: Inter, sans-serif;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="redoc"></div>
+        <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+        <script>
+          Redoc.init(
+            '/openapi.json',
+            ${JSON.stringify(redocOptions)},
+            document.getElementById('redoc')
+          );
+        </script>
+      </body>
+    </html>
+  `;
+  res.send(htmlContent);
+});
+Logger.info('Redoc UI available at /redoc');
+
+// Serve OpenAPI JSON at /openapi.json
+app.get('/openapi.json', (req, res) => {
+  res.json(specs);
+});
+
 // Routes
 app.use('/', routes);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use((req, res, next) => next(new NotFoundError()));
 
 // Middleware Error Handler
