@@ -260,13 +260,13 @@ const options: swaggerJsdoc.Options = {
               format: 'email',
               description: 'Agent email address',
             },
-            password: {
+            phone: {
               type: 'string',
-              format: 'password',
-              description: 'Agent password',
+              format: 'phone',
+              description: 'Agent phone',
             },
           },
-          required: ['email', 'password'],
+          required: ['email', 'phone'],
         },
         SignupRequest: {
           type: 'object',
@@ -280,13 +280,13 @@ const options: swaggerJsdoc.Options = {
               format: 'email',
               description: 'Agent email address',
             },
-            password: {
+            phone: {
               type: 'string',
-              format: 'password',
-              description: 'Agent password',
+              format: 'phone',
+              description: 'Agent phone',
             },
           },
-          required: ['name', 'email', 'password'],
+          required: ['name', 'email', 'phone'],
         },
         TokenResponse: {
           type: 'object',
