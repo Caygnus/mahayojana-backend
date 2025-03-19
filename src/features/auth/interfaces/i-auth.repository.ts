@@ -4,7 +4,6 @@ import { Agent } from '../entities/agent.entity';
 import { User } from '../entities/user.entity';
 
 export interface IAuthRepository {
-
   //  agent functions
   createAgent(data: CreateAgentDTO): Promise<Agent>;
   findAgentByPhone(phone: string): Promise<Agent | null>;
@@ -37,5 +36,4 @@ export interface IAuthRepository {
   //  user functions
   getAllUsers(): Promise<User[]>;
   deleteUser(id: string): Promise<boolean>;
-
 }

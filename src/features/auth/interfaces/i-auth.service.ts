@@ -8,15 +8,15 @@ export interface IAuthService {
   signupAgent(data: CreateAgentDTO): Promise<Agent>;
 
   loginAgent(data: LoginAgentDTO): Promise<Agent>;
-  
+
   logoutAgent(): Promise<Agent>;
-  
+
   getAgentById(id: string): Promise<Agent>;
-  
+
   getAllAgents(): Promise<Agent[]>;
-  
+
   deleteAgent(id: string): Promise<boolean>;
-  
+
   generateToken(agent: Agent): Promise<string>;
 
   signupUser(data: CreateUserDTO): Promise<User>;

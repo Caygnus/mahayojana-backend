@@ -9,7 +9,6 @@ import { UserMapper } from '../mappers/user.mapper';
 import { UserModel } from '../models/user.model';
 
 export class AuthRepository implements IAuthRepository {
-
   async deleteUser(id: string): Promise<boolean> {
     const result = await UserModel.findByIdAndDelete(id);
     return !!result;

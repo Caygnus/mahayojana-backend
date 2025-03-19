@@ -25,7 +25,7 @@ export class AuthService implements IAuthService {
     if (!isOtpValid) {
       throw new BadRequestError('Invalid OTP');
     }
-    
+
     const existingUser = await this.repository.findExistingUser({
       phone: data.phone,
       email: data.email,
@@ -175,7 +175,6 @@ export class AuthService implements IAuthService {
   async getAllAgents(): Promise<Agent[]> {
     return this.repository.getAllAgents();
   }
-
 
   async deleteAgent(id: string): Promise<boolean> {
     const agent = await this.repository.findAgentById(id);
