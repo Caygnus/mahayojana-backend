@@ -7,6 +7,8 @@ import { BadRequestError, NotFoundError } from '../../../core/ApiError';
 import { OtpService } from '../../otp/services/otp.service';
 import JWT from '../../../core/JWT';
 import Logger from '../../../core/Logger';
+import { CreateUserDTO, LoginUserDTO } from '../dtos/user.dto';
+import { User } from '../entities/user.entity';
 
 export class AuthService implements IAuthService {
   private repository: IAuthRepository;
@@ -14,6 +16,63 @@ export class AuthService implements IAuthService {
   constructor() {
     this.repository = new AuthRepository();
   }
+
+  async signupUser(data: CreateUserDTO): Promise<User> {
+    data.validate();
+    const otpService = new OtpService();
+    const isOtpValid = await otpService.verifyOtp(data.phone, data.otp);
+
+    if (!isOtpValid) {
+      throw new BadRequestError('Invalid OTP');
+    }
+    
+    const existingUser = await this.repository.findExistingUser({
+      phone: data.phone,
+      email: data.email,
+      adhaar: data.adhaar,
+    });
+    if (existingUser) {
+      throw new BadRequestError('User already exists');
+    }
+    const user = await this.repository.createUser(data);
+    return user;
+  }
+  async loginUser(data: LoginUserDTO): Promise<User> {
+    data.validate();
+    const otpService = new OtpService();
+    const isOtpValid = await otpService.verifyOtp(data.phone, data.otp);
+    if (!isOtpValid) {
+      throw new BadRequestError('Invalid OTP');
+    }
+    const user = await this.repository.findExistingUser({
+      phone: data.phone,
+    });
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
+  }
+
+  async getUserById(id: string): Promise<User> {
+    const user = await this.repository.findUserById(id);
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return this.repository.getAllUsers();
+  }
+
+  async deleteUser(id: string): Promise<boolean> {
+    const user = await this.repository.findUserById(id);
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return this.repository.deleteUser(id);
+  }
+
   async signupAgent(data: CreateAgentDTO): Promise<Agent> {
     data.validate();
 
@@ -29,6 +88,7 @@ export class AuthService implements IAuthService {
       email: data.email,
       adhaar: data.adhaar,
     });
+
     if (existingAgent) {
       throw new BadRequestError('Agent already exists');
     }
@@ -36,6 +96,7 @@ export class AuthService implements IAuthService {
     const agent = await this.repository.createAgent(data);
     return agent;
   }
+
   async loginAgent(data: LoginAgentDTO): Promise<Agent> {
     data.validate();
 
@@ -102,13 +163,27 @@ export class AuthService implements IAuthService {
   logoutAgent(): Promise<Agent> {
     throw new Error('Method not implemented.');
   }
-  getAgentById(id: string): Promise<Agent> {
-    throw new Error('Method not implemented.');
+
+  async getAgentById(id: string): Promise<Agent> {
+    const agent = await this.repository.findAgentById(id);
+    if (!agent) {
+      throw new NotFoundError('Agent not found');
+    }
+    return agent;
   }
-  getAllAgents(): Promise<Agent[]> {
-    throw new Error('Method not implemented.');
+
+  async getAllAgents(): Promise<Agent[]> {
+    return this.repository.getAllAgents();
   }
-  deleteAgent(id: string): Promise<Agent> {
-    throw new Error('Method not implemented.');
+
+
+  async deleteAgent(id: string): Promise<boolean> {
+    const agent = await this.repository.findAgentById(id);
+
+    if (!agent) {
+      throw new NotFoundError('Agent not found');
+    }
+
+    return this.repository.deleteAgent(id);
   }
 }
