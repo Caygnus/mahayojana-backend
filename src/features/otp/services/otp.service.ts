@@ -14,10 +14,13 @@ export class OtpService implements IOtpService {
     data.validate();
     const existingOtp = await this.repository.findOtpByPhone(data.phone);
 
-
     if (existingOtp) {
-      const remainingTime = Math.ceil((existingOtp.expiresAt.getTime() - Date.now()) / (1000 * 60));
-      throw new BadRequestError(`You can request an otp after ${remainingTime} minutes`);
+      const remainingTime = Math.ceil(
+        (existingOtp.expiresAt.getTime() - Date.now()) / (1000 * 60),
+      );
+      throw new BadRequestError(
+        `You can request an otp after ${remainingTime} minutes`,
+      );
     }
 
     // const code = Math.floor(100000 + Math.random() * 900000).toString();
