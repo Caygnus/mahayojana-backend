@@ -26,8 +26,10 @@ jobs:
             # Pull latest changes
             git pull origin main
 
-            # Install dependencies and build the project
-            npm install
+            # Install dependencies including dev dependencies
+            npm install --include=dev
+
+            # Build the project
             npm run build
 
             # Restart the backend with PM2, or start if not running
