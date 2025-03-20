@@ -7,9 +7,9 @@ export interface IAgentDocument
   _id: mongoose.Types.ObjectId;
 }
 
-const AgentSchema = new Schema(
+const AgentSchema = new Schema<IAgentDocument>(
   {
-    name: {
+    full_name: {
       type: String,
       required: true,
     },

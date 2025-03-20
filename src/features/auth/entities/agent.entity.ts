@@ -1,6 +1,6 @@
 export class Agent {
   id!: string;
-  name!: string;
+  full_name!: string;
   email!: string;
   phone!: string;
   adhaar!: string;
@@ -15,7 +15,7 @@ export class Agent {
   toJSON() {
     return {
       id: this.id,
-      name: this.name,
+      full_name: this.full_name,
       email: this.email,
       phone: this.phone,
       adhaar: this.adhaar,

@@ -4,7 +4,7 @@ import { IUserDocument } from '../models/user.model';
 export class UserMapper {
   static toEntity(doc: IUserDocument): User {
     return new User({
-      ...doc,
+      ...doc.toJSON(),
       id: doc._id.toString() ?? doc.id,
     });
   }
