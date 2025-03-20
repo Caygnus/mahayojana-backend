@@ -8,4 +8,6 @@ export interface IPolicyService {
   update(id: string, data: UpdatePolicyDTO): Promise<Policy | null>;
   delete(id: string): Promise<boolean>;
   list(filter?: Partial<Policy>): Promise<Policy[]>;
+
+  updatePolicyFields(id: string, data: UpdatePolicyDTO): Promise<Policy | null>;
 }

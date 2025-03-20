@@ -9,8 +9,7 @@ import { environment } from './config';
 import cors from 'cors';
 import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { specs } from './utils/swagger';
-import { redocOptions } from './utils/redoc';
+import * as path from 'path';
 
 // Load environment variables
 import './database';
@@ -33,21 +32,29 @@ app.use(
 );
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
+// Serve OpenAPI JSON
+app.get('/openapi.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'swagger/swagger.json'));
+});
+
 // Swagger UI
 app.use(
   '/api-docs',
   swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true }),
+  swaggerUi.setup(undefined, {
+    swaggerUrl: '/openapi.json',
+    explorer: true,
+  }),
 );
 Logger.info('Swagger UI available at /api-docs');
 
-// Serve Redoc UI at /redoc
+// Serve Redoc UI
 app.get('/redoc', (req, res) => {
   const htmlContent = `
     <!DOCTYPE html>
     <html>
       <head>
-        <title>${redocOptions.title}</title>
+        <title>API Documentation</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://fonts.googleapis.com/css?family=Inter:400,600|Source+Code+Pro:400" rel="stylesheet">
@@ -65,7 +72,25 @@ app.get('/redoc', (req, res) => {
         <script>
           Redoc.init(
             '/openapi.json',
-            ${JSON.stringify(redocOptions)},
+            {
+              hideDownloadButton: false,
+              theme: {
+                colors: {
+                  primary: {
+                    main: '#2684FF'
+                  }
+                },
+                typography: {
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  headings: {
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: '600'
+                  }
+                }
+              }
+            },
             document.getElementById('redoc')
           );
         </script>
@@ -75,11 +100,6 @@ app.get('/redoc', (req, res) => {
   res.send(htmlContent);
 });
 Logger.info('Redoc UI available at /redoc');
-
-// Serve OpenAPI JSON at /openapi.json
-app.get('/openapi.json', (req, res) => {
-  res.json(specs);
-});
 
 // Routes
 app.use('/', routes);

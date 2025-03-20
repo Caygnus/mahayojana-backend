@@ -23,7 +23,7 @@ const UserSchema = new Schema<IUserDocument>(
       required: true,
       unique: true,
     },
-    adhaar: {
+    adhaar_number: {
       type: String,
       unique: true,
     },

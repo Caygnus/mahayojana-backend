@@ -5,7 +5,7 @@ export class AgentMapper {
   static toEntity(doc: IAgentDocument): Agent {
     return new Agent({
       id: doc._id.toString(),
-      name: doc.name,
+      full_name: doc.full_name,
       email: doc.email,
       phone: doc.phone,
       adhaar: doc.adhaar,

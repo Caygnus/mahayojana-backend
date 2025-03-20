@@ -1,11 +1,12 @@
-import { Policy, PolicyStatus } from '../entities/policy.entity';
+import { BadRequestError } from '../../../core/ApiError';
+import { Policy, PolicyField, PolicyStatus } from '../entities/policy.entity';
 
 export class UpdatePolicyDTO implements Partial<Policy> {
   // Add your DTO properties here
   id!: string;
   title!: string;
   description!: string;
-  // fields!: PolicyField[];
+  fields!: PolicyField[];
   status!: PolicyStatus;
 
   constructor(data: Partial<UpdatePolicyDTO>) {
@@ -14,5 +15,6 @@ export class UpdatePolicyDTO implements Partial<Policy> {
 
   validate(): void {
     // Add validation logic here
+    if (!this.id) throw new BadRequestError('Id is required');
   }
 }

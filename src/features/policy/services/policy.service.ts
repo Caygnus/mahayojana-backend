@@ -4,7 +4,7 @@ import { PolicyRepository } from '../repositories/policy.repository';
 import { CreatePolicyDTO } from '../dtos/create-policy.dto';
 import { UpdatePolicyDTO } from '../dtos/update-policy.dto';
 import { Policy, PolicyStatus } from '../entities/policy.entity';
-
+import { NotFoundError } from '../../../core/ApiError';
 export class PolicyService implements IPolicyService {
   private repository: IPolicyRepository;
 
@@ -53,5 +53,16 @@ export class PolicyService implements IPolicyService {
 
   async list(filter?: Partial<Policy>): Promise<Policy[]> {
     return this.repository.findMany(filter || {});
+  }
+
+  async updatePolicyFields(
+    id: string,
+    data: UpdatePolicyDTO,
+  ): Promise<Policy | null> {
+    const policy = await this.repository.findById(id);
+    if (!policy) throw new NotFoundError('Policy not found');
+    return this.repository.update(id, {
+      fields: data.fields,
+    });
   }
 }

@@ -9,5 +9,6 @@ router.get('/:id', controller.findById);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
 router.get('/', controller.list);
+router.put('/:id/fields', controller.updateFields);
 
 export default router;
