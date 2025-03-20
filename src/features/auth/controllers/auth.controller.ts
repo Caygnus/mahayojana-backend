@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { AuthValidation } from '../validations/auth.validation';
 import { CreateAgentDTO, LoginAgentDTO } from '../dtos/agent.dto';
 import { SuccessResponse } from '../../../core/ApiResponse';
+import { CreateUserDTO, LoginUserDTO } from '../dtos/user.dto';
 
 export class AuthController {
   private service: AuthService;
@@ -34,6 +35,24 @@ export class AuthController {
         agent,
         token,
       }).send(res);
+    }),
+  ];
+
+  signupUser = [
+    validator(AuthValidation.userSignup, ValidationSource.BODY),
+    asyncHandler(async (req: Request, res: Response) => {
+      const data = new CreateUserDTO(req.body);
+      const result = await this.service.signupUser(data);
+      new SuccessResponse('User created successfully', result).send(res);
+    }),
+  ];
+
+  loginUser = [
+    validator(AuthValidation.userLogin, ValidationSource.BODY),
+    asyncHandler(async (req: Request, res: Response) => {
+      const data = new LoginUserDTO(req.body);
+      const result = await this.service.loginUser(data);
+      new SuccessResponse('User logged in successfully', result).send(res);
     }),
   ];
 }

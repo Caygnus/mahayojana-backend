@@ -125,7 +125,14 @@ export class PolicyValidation {
   });
 
   static update = Joi.object({
-    // Add validation for update fields
+    fields: Joi.array()
+      .items(
+        Joi.object({
+          name: Joi.string().required(),
+          field_id: Joi.string().required(),
+        }),
+      )
+      .optional(),
   });
 
   static id = Joi.object({
