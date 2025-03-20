@@ -43,8 +43,8 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(undefined, {
     swaggerUrl: '/openapi.json',
-    explorer: true
-  })
+    explorer: true,
+  }),
 );
 Logger.info('Swagger UI available at /api-docs');
 

@@ -1,43 +1,38 @@
 {
-    "entryFile": "src/app.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "controllerPathGlobs": [
-        "src/**/*Controller.ts"
-    ],
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "src/swagger",
+    "specVersion": 3,
+    "basePath": "/api",
+    "name": "Mahayojana API",
+    "description": "API Documentation for Mahayojana Backend",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    },
+    "tags": [],
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "specMerging": "recursive",
     "spec": {
-        "outputDirectory": "src/swagger",
-        "specVersion": 3,
-        "basePath": "/api",
-        "name": "Mahayojana API",
-        "description": "API Documentation for Mahayojana Backend",
-        "version": "1.0.0",
-        "contact": {
-            "name": "API Support"
-        },
-        "tags": [],
-        "securityDefinitions": {
-            "jwt": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        },
-        "specMerging": "recursive",
-        "spec": {
-            "paths": {}
-        }
-    },
-    "routes": {
-        "routesDir": "src/routes",
-        "middleware": "express"
-    },
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "*": [
-                "node_modules/*",
-                "src/types/*"
-            ]
-        }
+      "paths": {}
     }
+  },
+  "routes": {
+    "routesDir": "src/routes",
+    "middleware": "express"
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    }
+  }
 }

@@ -1,335 +1,310 @@
 {
-	"openapi": "3.0.0",
-	"components": {
-		"examples": {},
-		"headers": {},
-		"parameters": {},
-		"requestBodies": {},
-		"responses": {},
-		"schemas": {
-			"CreateAgentDTO": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"adhaar": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"otp": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"email",
-					"phone",
-					"adhaar",
-					"otp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateUserDTO": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"full_name": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"adhaar_number": {
-						"type": "string"
-					},
-					"address_line_1": {
-						"type": "string"
-					},
-					"address_line_2": {
-						"type": "string"
-					},
-					"city": {
-						"type": "string"
-					},
-					"state": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"pincode": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"adhaar": {
-						"type": "string"
-					},
-					"otp": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"full_name",
-					"email",
-					"phone",
-					"otp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginUserDTO": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"full_name": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"adhaar_number": {
-						"type": "string"
-					},
-					"address_line_1": {
-						"type": "string"
-					},
-					"address_line_2": {
-						"type": "string"
-					},
-					"city": {
-						"type": "string"
-					},
-					"state": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"pincode": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"otp": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"phone",
-					"otp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			}
-		},
-		"securitySchemes": {
-			"jwt": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		}
-	},
-	"info": {
-		"title": "Mahayojana API",
-		"version": "1.0.0",
-		"description": "API Documentation for Mahayojana Backend",
-		"license": {
-			"name": "ISC"
-		},
-		"contact": {
-			"name": "API Support"
-		}
-	},
-	"servers": [
-		{
-			"url": "/api"
-		}
-	],
-	"tags": [],
-	"paths": {
-		"/auth/signup-agent": {
-			"post": {
-				"operationId": "SignupAgent",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"201": {
-						"description": "Agent created successfully"
-					}
-				},
-				"description": "Register a new agent",
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateAgentDTO"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/login-agent": {
-			"post": {
-				"operationId": "LoginAgent",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"description": "Login an existing agent",
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"otp": {
-										"type": "string"
-									},
-									"phone": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"otp",
-									"phone"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/signup-user": {
-			"post": {
-				"operationId": "SignupUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					},
-					"201": {
-						"description": "User created successfully"
-					}
-				},
-				"description": "Register a new user",
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateUserDTO"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/login-user": {
-			"post": {
-				"operationId": "LoginUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"description": "Login an existing user",
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/LoginUserDTO"
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  "openapi": "3.0.0",
+  "components": {
+    "examples": {},
+    "headers": {},
+    "parameters": {},
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "CreateAgentDTO": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "adhaar": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "otp": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "email", "phone", "adhaar", "otp"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CreateUserDTO": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "adhaar_number": {
+            "type": "string"
+          },
+          "address_line_1": {
+            "type": "string"
+          },
+          "address_line_2": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "pincode": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "adhaar": {
+            "type": "string"
+          },
+          "otp": {
+            "type": "string"
+          }
+        },
+        "required": ["full_name", "email", "phone", "otp"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "LoginUserDTO": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "adhaar_number": {
+            "type": "string"
+          },
+          "address_line_1": {
+            "type": "string"
+          },
+          "address_line_2": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "pincode": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "otp": {
+            "type": "string"
+          }
+        },
+        "required": ["phone", "otp"],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "info": {
+    "title": "Mahayojana API",
+    "version": "1.0.0",
+    "description": "API Documentation for Mahayojana Backend",
+    "license": {
+      "name": "ISC"
+    },
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/auth/signup-agent": {
+      "post": {
+        "operationId": "SignupAgent",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "201": {
+            "description": "Agent created successfully"
+          }
+        },
+        "description": "Register a new agent",
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgentDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login-agent": {
+      "post": {
+        "operationId": "LoginAgent",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "description": "Login an existing agent",
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "otp": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  }
+                },
+                "required": ["otp", "phone"],
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup-user": {
+      "post": {
+        "operationId": "SignupUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "201": {
+            "description": "User created successfully"
+          }
+        },
+        "description": "Register a new user",
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login-user": {
+      "post": {
+        "operationId": "LoginUser",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "description": "Login an existing user",
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDTO"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
