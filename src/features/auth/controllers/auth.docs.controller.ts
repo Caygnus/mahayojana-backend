@@ -11,14 +11,17 @@ export class AuthDocsController {
    */
   @Post('signup-agent')
   @Response(201, 'Agent created successfully')
-  public async signupAgent(@Body() data: {
-    name: string;
-    email: string;
-    phone: string;
-    adhaar: string;
-    address?: string;
-    otp: string;
-  }): Promise<any> {
+  public async signupAgent(
+    @Body()
+    data: {
+      name: string;
+      email: string;
+      phone: string;
+      adhaar: string;
+      address?: string;
+      otp: string;
+    },
+  ): Promise<any> {
     return {} as any; // This is just for documentation
   }
 
@@ -46,7 +49,10 @@ export class AuthDocsController {
    * Login an existing user
    */
   @Post('login-user')
-  @Response<{ user: User & { token: string } }>(200, 'User logged in successfully')
+  @Response<{ user: User & { token: string } }>(
+    200,
+    'User logged in successfully',
+  )
   public async loginUser(@Body() data: LoginUserDTO): Promise<any> {
     return {} as any; // This is just for documentation
   }

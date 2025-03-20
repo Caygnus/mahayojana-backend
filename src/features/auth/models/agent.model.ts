@@ -3,7 +3,7 @@ import { Agent } from '../entities/agent.entity';
 
 export interface IAgentDocument
   extends Omit<Agent, 'toJSON' | 'toObject' | 'id'>,
-  Document {
+    Document {
   _id: mongoose.Types.ObjectId;
 }
 
