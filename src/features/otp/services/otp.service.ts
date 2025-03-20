@@ -29,7 +29,7 @@ export class OtpService implements IOtpService {
     const otpData = {
       phone: data.phone,
       code,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 5),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 3),
     };
     return this.repository.createOtp(otpData);
   }

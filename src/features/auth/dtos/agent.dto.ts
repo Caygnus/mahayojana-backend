@@ -2,7 +2,7 @@ import { BadRequestError } from '../../../core/ApiError';
 import { Agent } from '../entities/agent.entity';
 
 export class CreateAgentDTO implements Partial<Agent> {
-  name!: string;
+  full_name!: string;
   email!: string;
   phone!: string;
   adhaar!: string;
@@ -14,7 +14,7 @@ export class CreateAgentDTO implements Partial<Agent> {
   }
 
   validate(): void {
-    if (!this.name) throw new BadRequestError('Name is required');
+    if (!this.full_name) throw new BadRequestError('Full name is required');
     if (!this.email) throw new BadRequestError('Email is required');
     if (!this.phone) throw new BadRequestError('Phone is required');
     if (!this.adhaar) throw new BadRequestError('Adhaar is required');

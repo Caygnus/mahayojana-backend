@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity';
 
 export class AuthValidation {
   static agentSignup = Joi.object({
-    name: Joi.string().required(),
+    full_name: Joi.string().required(),
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
     adhaar: Joi.string().required(),

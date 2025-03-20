@@ -3,13 +3,13 @@ import { Agent } from '../entities/agent.entity';
 
 export interface IAgentDocument
   extends Omit<Agent, 'toJSON' | 'toObject' | 'id'>,
-    Document {
+  Document {
   _id: mongoose.Types.ObjectId;
 }
 
-const AgentSchema = new Schema(
+const AgentSchema = new Schema<IAgentDocument>(
   {
-    name: {
+    full_name: {
       type: String,
       required: true,
     },
