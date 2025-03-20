@@ -32,7 +32,9 @@
     "generate-swagger": "ts-node scripts/generate-swagger.ts",
     "make-min-feature": "ts-node scripts/create-minimal-feature.ts",
     "env:encrypt": "dotenv-store encrypt",
-    "env:decrypt": "dotenv-store decrypt"
+    "env:decrypt": "dotenv-store decrypt",
+    "debug": "node --inspect -r ts-node/register src/server.ts",
+    "debug-brk": "node --inspect-brk -r ts-node/register src/server.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
