@@ -10,8 +10,8 @@ module.exports = {
       watch: false,
       env: {
         NODE_ENV: 'production',
-        DB_NAME: 'mahayojana-dev-db'
-      }
-    }
-  ]
+        DB_NAME: 'mahayojana-dev-db',
+      },
+    },
+  ],
 };
