@@ -32,8 +32,14 @@ jobs:
             # Build the project
             npm run build
 
-            # Restart the backend with PM2, or start if not running
-            pm2 restart mahayojana-backend || pm2 start ecosystem.config.js
+            # Ensure environment variables are set in PM2
+            if [ -f .env ]; then
+              # Restart with environment variables from .env
+              pm2 restart mahayojana-backend --update-env || pm2 start ecosystem.config.js
+            else
+              echo "Warning: .env file not found!"
+              exit 1
+            fi
 
             # Reload Nginx (ignore errors if it fails)
             sudo systemctl reload nginx || true
