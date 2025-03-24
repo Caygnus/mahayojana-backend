@@ -8,10 +8,6 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node -r dotenv/config build/server.js",
-    "start:pm2": "pm2 start ecosystem.config.js --env production",
-    "start:pm2:dev": "pm2 start ecosystem.config.js --env development",
-    "deploy:setup": "pm2 deploy production setup",
-    "deploy:prod": "pm2 deploy production",
     "serve": "node -r dotenv/config build/server.js",
     "build": "npm run clean && npm run build-ts",
     "watch": "npx concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
@@ -20,10 +16,6 @@
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "dev": "npm run watch",
-    "stop": "pm2 stop all",
-    "restart": "pm2 restart all",
-    "delete": "pm2 delete all",
-    "logs": "pm2 logs",
     "check": "tsc --noEmit",
     "eslint": "eslint . --ext .js,.ts",
     "upgrade": "npm update --save-dev && npm update --save",
@@ -35,13 +27,9 @@
     "format": "prettier --write .",
     "make-env": "ts-node scripts/make-env.ts",
     "create-feature": "ts-node scripts/create-feature.ts",
-    "setup": "ts-node scripts/setup/index.ts",
     "delete-feature": "ts-node scripts/cleanup-feature.ts",
-    "make-min-feature": "ts-node scripts/create-minimal-feature.ts",
     "env:encrypt": "dotenv-store encrypt",
-    "env:decrypt": "dotenv-store decrypt",
-    "debug": "node --inspect -r ts-node/register src/server.ts",
-    "debug-brk": "node --inspect-brk -r ts-node/register src/server.ts"
+    "env:decrypt": "dotenv-store decrypt"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
