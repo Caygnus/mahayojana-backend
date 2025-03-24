@@ -65,7 +65,7 @@ export class AuthController {
     validator(AuthValidation.auth, ValidationSource.HEADER),
     asyncHandler(async (req: Request, res: Response) => {
       const token = req.headers.authorization?.split(' ')[1];
-      Logger.info('headers', req.headers,);
+      Logger.info('headers', req.headers);
       Logger.info(token);
       if (!token) {
         throw new BadRequestError('Token is required');
@@ -86,4 +86,4 @@ export class AuthController {
       new SuccessResponse('User details', user).send(res);
     }),
   ];
-} 
+}
