@@ -13,7 +13,7 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',
         // Port will be dynamically assigned by the deployment script
-      }
-    }
-  ]
+      },
+    },
+  ],
 };
