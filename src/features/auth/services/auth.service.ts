@@ -117,7 +117,7 @@ export class AuthService implements IAuthService {
     return agent;
   }
 
-  async generateToken(agent: Agent): Promise<string> {
+  async generateToken(agent: Agent | User): Promise<string> {
     return await JWT.encode({
       aud: 'agent',
       sub: agent.id,
@@ -126,37 +126,38 @@ export class AuthService implements IAuthService {
       exp: new Date().getTime() + 1000 * 60 * 60 * 24 * 30,
       prm: JSON.stringify({
         id: agent.id,
+        type: agent instanceof Agent ? 'agent' : 'user',
       }),
     });
   }
 
   async validateToken(
     token: string,
-  ): Promise<{ valid: boolean; agent: Agent | null }> {
+  ): Promise<{ valid: boolean; id: string | null }> {
     try {
       const payload = await JWT.decode(token);
+      Logger.info('decoded token', payload);
 
       // Validate audience and issuer
       if (payload.aud !== 'agent' || payload.iss !== 'api') {
-        return { valid: false, agent: null };
+        return { valid: false, id: null };
       }
 
       // Validate expiration
       const now = new Date().getTime();
       if (payload.exp < now) {
-        return { valid: false, agent: null };
+        return { valid: false, id: null };
       }
 
       // Get agent from payload
-      const agentId = payload.sub;
-      const agent = await this.repository.findAgentById(agentId);
+      const id = payload.sub;
 
       return {
-        valid: !!agent,
-        agent,
+        valid: !!id,
+        id: id,
       };
     } catch (error) {
-      return { valid: false, agent: null };
+      return { valid: false, id: null };
     }
   }
 
@@ -184,5 +185,29 @@ export class AuthService implements IAuthService {
     }
 
     return this.repository.deleteAgent(id);
+  }
+
+  async agentMe(token: string): Promise<Agent> {
+    const { valid, id } = await this.validateToken(token);
+    if (!valid) {
+      throw new NotFoundError('Agent not found');
+    }
+    const agent = await this.repository.findAgentById(id || '');
+    if (!agent) {
+      throw new NotFoundError('Agent not found');
+    }
+    return agent;
+  }
+
+  async userMe(token: string): Promise<User> {
+    const { valid, id } = await this.validateToken(token);
+    if (!valid) {
+      throw new NotFoundError('User not found');
+    }
+    const user = await this.repository.findUserById(id || '');
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
   }
 }

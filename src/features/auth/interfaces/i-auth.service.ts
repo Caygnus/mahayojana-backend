@@ -28,4 +28,8 @@ export interface IAuthService {
   getAllUsers(): Promise<User[]>;
 
   deleteUser(id: string): Promise<boolean>;
+
+  agentMe(token: string): Promise<Agent>;
+
+  userMe(token: string): Promise<User>;
 }

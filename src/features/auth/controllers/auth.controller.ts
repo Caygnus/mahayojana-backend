@@ -6,7 +6,8 @@ import { AuthValidation } from '../validations/auth.validation';
 import { CreateAgentDTO, LoginAgentDTO } from '../dtos/agent.dto';
 import { SuccessResponse } from '../../../core/ApiResponse';
 import { CreateUserDTO, LoginUserDTO } from '../dtos/user.dto';
-
+import { BadRequestError } from '../../../core/ApiError';
+import Logger from '../../../core/Logger';
 export class AuthController {
   private service: AuthService;
 
@@ -52,7 +53,37 @@ export class AuthController {
     asyncHandler(async (req: Request, res: Response) => {
       const data = new LoginUserDTO(req.body);
       const result = await this.service.loginUser(data);
-      new SuccessResponse('User logged in successfully', result).send(res);
+      const token = await this.service.generateToken(result);
+      new SuccessResponse('User logged in successfully', {
+        user: result,
+        token,
+      }).send(res);
     }),
   ];
-}
+
+  agentMe = [
+    validator(AuthValidation.auth, ValidationSource.HEADER),
+    asyncHandler(async (req: Request, res: Response) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      Logger.info('headers', req.headers,);
+      Logger.info(token);
+      if (!token) {
+        throw new BadRequestError('Token is required');
+      }
+      const agent = await this.service.agentMe(token);
+      new SuccessResponse('Agent details', agent).send(res);
+    }),
+  ];
+
+  userMe = [
+    validator(AuthValidation.auth, ValidationSource.HEADER),
+    asyncHandler(async (req: Request, res: Response) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        throw new BadRequestError('Token is required');
+      }
+      const user = await this.service.userMe(token);
+      new SuccessResponse('User details', user).send(res);
+    }),
+  ];
+} 

@@ -12,4 +12,8 @@ router.post('/signup-user', controller.signupUser);
 
 router.post('/login-user', controller.loginUser);
 
+router.get('/me/agent', controller.agentMe);
+
+router.get('/me/user', controller.userMe);
+
 export default router;
