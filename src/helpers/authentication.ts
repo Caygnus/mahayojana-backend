@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+  import { Request, Response, NextFunction } from 'express';
 import { AuthFailureError } from '../core/ApiError';
 import { AuthService } from '../features/auth/services/auth.service';
 import Logger from '../core/Logger';
@@ -27,14 +27,14 @@ const authentication = async (
 
     // Validate the token
     const authService = new AuthService();
-    const { valid, agent } = await authService.validateToken(token);
+    const { valid, id: agentId } = await authService.validateToken(token);
 
-    if (!valid || !agent) {
+    if (!valid || !agentId) {
       throw new AuthFailureError('Invalid or expired token');
     }
 
     // Add the authenticated agent to the request
-    (req as any).agent = agent;
+    (req as any).agentId = agentId;
 
     next();
   } catch (error) {

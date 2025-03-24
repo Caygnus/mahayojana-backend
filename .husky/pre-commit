@@ -1,3 +1,4 @@
 npm run format
 npm run make-env
+npm run build
 npm run env:encrypt || echo "done"
